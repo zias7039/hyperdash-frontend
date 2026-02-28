@@ -16,16 +16,31 @@ interface Position {
 
 interface PositionsTableProps {
     positions: Position[];
+    btc_benchmark?: {
+        price: number;
+        change24h: number;
+    };
 }
 
-export default function PositionsTable({ positions }: PositionsTableProps) {
+export default function PositionsTable({ positions, btc_benchmark }: PositionsTableProps) {
     const formatNum = (val: string | number) => Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
     const formatCurrency = (val: string | number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val));
 
     return (
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg mt-6 overflow-hidden">
-            <div className="p-5 border-b border-zinc-800">
+            <div className="p-5 border-b border-zinc-800 flex items-center justify-between flex-wrap gap-4">
                 <h3 className="text-xl font-bold text-white">현재 포지션</h3>
+                {btc_benchmark && (
+                    <div className="flex items-center space-x-2 text-sm bg-zinc-800/50 px-3 py-1.5 rounded-lg border border-zinc-700/50">
+                        <span className="text-zinc-400">BTC 벤치마크:</span>
+                        <span className="font-bold text-white max-w-[120px] truncate" title={formatCurrency(btc_benchmark.price)}>
+                            {formatCurrency(btc_benchmark.price)}
+                        </span>
+                        <span className={`font-bold ${btc_benchmark.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                            ({btc_benchmark.change24h > 0 ? '+' : ''}{btc_benchmark.change24h.toFixed(2)}%)
+                        </span>
+                    </div>
+                )}
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-zinc-300">

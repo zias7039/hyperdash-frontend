@@ -54,7 +54,7 @@ export default function Dashboard() {
     );
   }
 
-  const { metrics, positions, history } = data;
+  const { metrics, positions, history, btc_benchmark } = data;
 
   return (
     <div className="min-h-screen bg-black text-white p-6 font-sans selection:bg-indigo-500/30">
@@ -106,7 +106,7 @@ export default function Dashboard() {
         </div>
 
         {/* Bottom Section - Positions */}
-        <PositionsTable positions={positions} />
+        <PositionsTable positions={positions} btc_benchmark={btc_benchmark} />
 
       </div>
     </div>
