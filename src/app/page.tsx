@@ -40,6 +40,20 @@ export default function Dashboard() {
     );
   }
 
+  if (!data.metrics || !data.positions) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black text-white">
+        <div className="text-center p-8 bg-zinc-900 rounded-xl border border-yellow-500/50">
+          <h2 className="text-2xl font-bold text-yellow-500 mb-2">Backend API Error</h2>
+          <p className="text-zinc-400 mb-4">The backend returned an unexpected response format.</p>
+          <pre className="text-xs text-red-400 p-4 bg-black rounded overflow-auto max-w-lg text-left">
+            {JSON.stringify(data, null, 2)}
+          </pre>
+        </div>
+      </div>
+    );
+  }
+
   const { metrics, positions, history } = data;
 
   return (
