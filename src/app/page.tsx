@@ -7,6 +7,7 @@ import LeftSummary from '@/components/LeftSummary';
 import PositionsTable from '@/components/PositionsTable';
 import NavChart from '@/components/NavChart';
 import MarginPieChart from '@/components/MarginPieChart';
+import Heatmap from '@/components/Heatmap';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -101,9 +102,14 @@ export default function Dashboard() {
             <MarginPieChart data={margin_distribution} />
           </div>
 
-          {/* Right Column - Chart */}
-          <div className="lg:col-span-3 h-full">
-            <NavChart history={history} />
+          {/* Right Column - Chart & Heatmap */}
+          <div className="lg:col-span-3 h-full flex flex-col gap-6">
+            <div className="flex-[3]">
+              <NavChart history={history} />
+            </div>
+            <div className="flex-[1]">
+              <Heatmap history={history} />
+            </div>
           </div>
         </div>
 
