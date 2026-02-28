@@ -21,9 +21,9 @@ export default function Dashboard() {
     return (
       <div className="flex h-screen items-center justify-center bg-black text-white">
         <div className="text-center p-8 bg-zinc-900 rounded-xl border border-rose-500/50">
-          <h2 className="text-2xl font-bold text-rose-500 mb-2">Connection Error</h2>
-          <p className="text-zinc-400">Failed to connect to the backend server.</p>
-          <p className="text-xs text-zinc-500 mt-4">Ensure FastAPI is running on port 8000.</p>
+          <h2 className="text-2xl font-bold text-rose-500 mb-2">연결 오류</h2>
+          <p className="text-zinc-400">백엔드 서버 연결에 실패했습니다.</p>
+          <p className="text-xs text-zinc-500 mt-4">FastAPI 서버가 8000 포트에서 실행 중인지 확인하세요.</p>
         </div>
       </div>
     );
@@ -34,7 +34,7 @@ export default function Dashboard() {
       <div className="flex h-screen items-center justify-center bg-black text-white">
         <div className="flex flex-col items-center">
           <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-zinc-400 font-medium tracking-wider animate-pulse">LOADING DASHBOARD...</p>
+          <p className="text-zinc-400 font-medium tracking-wider animate-pulse">대시보드 로딩 중...</p>
         </div>
       </div>
     );
@@ -44,8 +44,8 @@ export default function Dashboard() {
     return (
       <div className="flex h-screen items-center justify-center bg-black text-white">
         <div className="text-center p-8 bg-zinc-900 rounded-xl border border-yellow-500/50">
-          <h2 className="text-2xl font-bold text-yellow-500 mb-2">Backend API Error</h2>
-          <p className="text-zinc-400 mb-4">The backend returned an unexpected response format.</p>
+          <h2 className="text-2xl font-bold text-yellow-500 mb-2">백엔드 API 오류</h2>
+          <p className="text-zinc-400 mb-4">백엔드에서 예상치 못한 응답 포맷을 반환했습니다.</p>
           <pre className="text-xs text-red-400 p-4 bg-black rounded overflow-auto max-w-lg text-left">
             {JSON.stringify(data, null, 2)}
           </pre>
@@ -72,7 +72,7 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center space-x-2 text-sm text-zinc-500">
             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse"></div>
-            <span>Live Sync Active</span>
+            <span>실시간 동기화 중</span>
           </div>
         </header>
 
@@ -85,7 +85,7 @@ export default function Dashboard() {
         />
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 align-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
 
           {/* Left Column - Summary */}
           <div className="lg:col-span-1 h-full">

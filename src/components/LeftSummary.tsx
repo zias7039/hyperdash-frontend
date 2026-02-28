@@ -25,7 +25,7 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg h-full">
             <h3 className="text-xl font-bold text-white mb-6 flex items-center">
                 <Activity className="w-5 h-5 mr-2 text-indigo-400" />
-                Summary
+                요약
             </h3>
 
             <div className="space-y-6">
@@ -49,7 +49,7 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
 
                 <div className="bg-zinc-800/50 p-4 rounded-lg flex justify-between items-center">
                     <div>
-                        <span className="text-zinc-400 text-sm font-medium uppercase mb-1 block">Margin Usage</span>
+                        <span className="text-zinc-400 text-sm font-medium uppercase mb-1 block">증거금 사용률</span>
                         <span className="text-xl font-semibold text-white">{usage_pct.toFixed(2)}%</span>
                     </div>
                     <div className="w-24 bg-zinc-700 rounded-full h-2.5">
@@ -61,7 +61,7 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
                 </div>
 
                 <div className="bg-zinc-800/50 p-4 rounded-lg">
-                    <span className="text-zinc-400 text-sm font-medium uppercase mb-1 block">Open Positions</span>
+                    <span className="text-zinc-400 text-sm font-medium uppercase mb-1 block">보유 포지션</span>
                     <span className="text-xl font-semibold text-white">{pos_data.length}</span>
                 </div>
             </div>

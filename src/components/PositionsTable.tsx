@@ -25,26 +25,26 @@ export default function PositionsTable({ positions }: PositionsTableProps) {
     return (
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg mt-6 overflow-hidden">
             <div className="p-5 border-b border-zinc-800">
-                <h3 className="text-xl font-bold text-white">Current Positions</h3>
+                <h3 className="text-xl font-bold text-white">현재 포지션</h3>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-zinc-300">
                     <thead className="text-xs text-zinc-400 uppercase bg-zinc-800/50">
                         <tr>
-                            <th className="px-6 py-4">Symbol</th>
-                            <th className="px-6 py-4">Side/Lev</th>
-                            <th className="px-6 py-4 text-right">Margin</th>
-                            <th className="px-6 py-4 text-right">Entry Price</th>
-                            <th className="px-6 py-4 text-right">Mark Price</th>
-                            <th className="px-6 py-4 text-right">Unrealized PNL</th>
-                            <th className="px-6 py-4 text-right">Liq. Price</th>
+                            <th className="px-6 py-4">심볼</th>
+                            <th className="px-6 py-4">포지션/레버리지</th>
+                            <th className="px-6 py-4 text-right">증거금</th>
+                            <th className="px-6 py-4 text-right">진입가</th>
+                            <th className="px-6 py-4 text-right">시장가</th>
+                            <th className="px-6 py-4 text-right">미실현 손익</th>
+                            <th className="px-6 py-4 text-right">청산가</th>
                         </tr>
                     </thead>
                     <tbody>
                         {positions.length === 0 ? (
                             <tr>
                                 <td colSpan={7} className="px-6 py-8 text-center text-zinc-500">
-                                    No open positions found.
+                                    보유 중인 포지션이 없습니다.
                                 </td>
                             </tr>
                         ) : (

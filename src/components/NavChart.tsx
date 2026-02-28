@@ -16,8 +16,8 @@ export default function NavChart({ history }: NavChartProps) {
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg h-[400px] flex flex-col">
-            <h3 className="text-xl font-bold text-white mb-4">Equity & NAV History</h3>
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg h-full min-h-[400px] flex flex-col">
+            <h3 className="text-xl font-bold text-white mb-4">자산 & NAV 히스토리</h3>
             {history.length > 0 ? (
                 <div className="flex-1 w-full min-h-0">
                     <ResponsiveContainer width="100%" height="100%">
@@ -55,8 +55,7 @@ export default function NavChart({ history }: NavChartProps) {
                             <Tooltip
                                 contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#f4f4f5' }}
                                 itemStyle={{ color: '#818cf8' }}
-                                labelStyle={{ color: '#a1a1aa', marginBottom: '4px' }}
-                                formatter={(value: any) => [formatCurrency(Number(value) || 0), 'Equity']}
+                                formatter={(value: any) => [formatCurrency(Number(value) || 0), '자산']}
                             />
                             <Area
                                 type="monotone"
@@ -72,7 +71,7 @@ export default function NavChart({ history }: NavChartProps) {
                 </div>
             ) : (
                 <div className="flex-1 flex items-center justify-center text-zinc-500">
-                    No history data available.
+                    히스토리 데이터가 없습니다.
                 </div>
             )}
         </div>
