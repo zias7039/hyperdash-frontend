@@ -6,6 +6,7 @@ import TopBar from '@/components/TopBar';
 import LeftSummary from '@/components/LeftSummary';
 import PositionsTable from '@/components/PositionsTable';
 import NavChart from '@/components/NavChart';
+import MarginPieChart from '@/components/MarginPieChart';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -54,7 +55,7 @@ export default function Dashboard() {
     );
   }
 
-  const { metrics, positions, history, btc_benchmark } = data;
+  const { metrics, positions, history, btc_benchmark, margin_distribution } = data;
 
   return (
     <div className="min-h-screen bg-black text-white p-6 font-sans selection:bg-indigo-500/30">
@@ -87,8 +88,8 @@ export default function Dashboard() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
 
-          {/* Left Column - Summary */}
-          <div className="lg:col-span-1 h-full">
+          {/* Left Column - Summary & Pie Chart */}
+          <div className="lg:col-span-1 h-full flex flex-col gap-6">
             <LeftSummary
               equity={metrics.equity}
               usage_pct={metrics.usage_pct}
@@ -97,6 +98,7 @@ export default function Dashboard() {
               pos_data={positions}
               usdt_rate={metrics.usdt_rate}
             />
+            <MarginPieChart data={margin_distribution} />
           </div>
 
           {/* Right Column - Chart */}
