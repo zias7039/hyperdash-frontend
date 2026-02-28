@@ -76,6 +76,7 @@ export default function NavChart({ history }: NavChartProps) {
                                 fillOpacity={1}
                                 fill="url(#colorBtc)"
                                 animationDuration={1000}
+                                connectNulls={true}
                             />
                             <Area
                                 type="monotone"
@@ -85,6 +86,7 @@ export default function NavChart({ history }: NavChartProps) {
                                 fillOpacity={1}
                                 fill="url(#colorEquity)"
                                 animationDuration={1000}
+                                connectNulls={true}
                             />
                         </AreaChart>
                     </ResponsiveContainer>
