@@ -56,7 +56,7 @@ export default function NavChart({ history }: NavChartProps) {
                                 contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#f4f4f5' }}
                                 itemStyle={{ color: '#818cf8' }}
                                 labelStyle={{ color: '#a1a1aa', marginBottom: '4px' }}
-                                formatter={(value: number) => [formatCurrency(value), 'Equity']}
+                                formatter={(value: any) => [formatCurrency(Number(value) || 0), 'Equity']}
                             />
                             <Area
                                 type="monotone"
