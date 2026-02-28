@@ -5,6 +5,8 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 interface HistoryRecord {
     date: string;
     equity: number;
+    btc_nav?: number;
+    btc_price?: number;
 }
 
 interface NavChartProps {
@@ -26,6 +28,10 @@ export default function NavChart({ history }: NavChartProps) {
                                 <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#818cf8" stopOpacity={0.3} />
                                     <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="colorBtc" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.15} />
+                                    <stop offset="95%" stopColor="#fbbf24" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
@@ -55,7 +61,21 @@ export default function NavChart({ history }: NavChartProps) {
                             <Tooltip
                                 contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#f4f4f5' }}
                                 itemStyle={{ color: '#818cf8' }}
-                                formatter={(value: any) => [formatCurrency(Number(value) || 0), '자산']}
+                                formatter={(value: any, name: string | undefined) => {
+                                    if (name === 'equity') return [formatCurrency(Number(value) || 0), '내 자산'];
+                                    if (name === 'btc_nav') return [formatCurrency(Number(value) || 0), 'BTC 벤치마크'];
+                                    return [value, name || ''];
+                                }}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="btc_nav"
+                                stroke="#fbbf24"
+                                strokeWidth={2}
+                                strokeDasharray="5 5"
+                                fillOpacity={1}
+                                fill="url(#colorBtc)"
+                                animationDuration={1000}
                             />
                             <Area
                                 type="monotone"
