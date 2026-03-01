@@ -26,7 +26,7 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
     const roi = calcROI();
 
     return (
-        <div className="flex flex-wrap items-center justify-between bg-zinc-900 border border-zinc-800 p-6 rounded-xl shadow-lg mb-6 relative">
+        <div className="flex flex-wrap items-center justify-between bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl mb-6 relative hover:-translate-y-1 transition-transform duration-300">
             <button
                 onClick={() => setIsModalOpen(true)}
                 className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 transition-colors p-2"
@@ -37,22 +37,22 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
             <div className="flex flex-col">
                 <span className="text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">총 자산</span>
                 <div className="flex items-baseline space-x-3">
-                    <span className="text-3xl font-bold text-white">{formatCurrency(equity)}</span>
-                    <span className="text-sm font-medium text-emerald-400">/{formatKRW(equity)}</span>
+                    <span className="text-4xl font-extrabold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] tracking-tight">{formatCurrency(equity)}</span>
+                    <span className="text-sm font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">/{formatKRW(equity)}</span>
                 </div>
             </div>
 
             <div className="flex flex-col items-end">
                 <span className="text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">누적 수익률 (ROI)</span>
-                <span className={`text-xl font-bold ${roi >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                <span className={`text-2xl font-black drop-shadow-md ${roi >= 0 ? 'text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.4)]' : 'text-rose-400 drop-shadow-[0_0_12px_rgba(251,113,133,0.4)]'}`}>
                     {roi > 0 ? '+' : ''}{roi.toFixed(2)}%
                 </span>
-                <span className="text-xs text-zinc-500">원금: {formatCurrency(total_invested)}</span>
+                <span className="text-xs text-zinc-500 font-medium">원금: {formatCurrency(total_invested)}</span>
             </div>
 
             <div className="flex flex-col items-end">
                 <span className="text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">사용 가능 증거금</span>
-                <span className="text-xl font-semibold text-white">{formatCurrency(available)}</span>
+                <span className="text-2xl font-bold text-white tracking-tight">{formatCurrency(available)}</span>
             </div>
 
             <div className="flex flex-col items-end pr-8">

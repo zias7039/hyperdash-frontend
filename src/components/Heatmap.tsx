@@ -33,7 +33,7 @@ export default function Heatmap({ history }: HeatmapProps) {
     };
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg h-full flex flex-col">
+        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
             <h3 className="text-xl font-bold text-white mb-4">일일 손익 히트맵</h3>
             {recentHistory.length > 0 ? (
                 <div className="flex-1 flex flex-wrap gap-1.5 items-end justify-start overflow-hidden">

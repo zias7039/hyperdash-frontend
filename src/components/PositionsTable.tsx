@@ -39,9 +39,9 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
     };
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg mt-6 overflow-hidden">
-            <div className="p-5 border-b border-zinc-800 flex items-center justify-between flex-wrap gap-4">
-                <h3 className="text-xl font-bold text-white">현재 포지션</h3>
+        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl mt-6 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-300">
+            <div className="p-5 border-b border-white/10 bg-zinc-900/40 flex items-center justify-between flex-wrap gap-4">
+                <h3 className="text-xl font-bold text-white tracking-wide">현재 포지션</h3>
                 {btc_benchmark && (
                     <div className="flex items-center space-x-2 text-sm bg-zinc-800/50 px-3 py-1.5 rounded-lg border border-zinc-700/50">
                         <span className="text-zinc-400">BTC 벤치마크:</span>
@@ -56,7 +56,7 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-zinc-300">
-                    <thead className="text-xs text-zinc-400 uppercase bg-zinc-800/50">
+                    <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/60 backdrop-blur border-b border-white/5">
                         <tr>
                             <th className="px-6 py-4">심볼</th>
                             <th className="px-6 py-4">포지션/레버리지</th>
@@ -101,7 +101,7 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
                                                 <div className="w-full bg-zinc-800 rounded-full h-1.5 overflow-hidden flex items-center justify-end">
                                                     <div
                                                         className={`h-1.5 rounded-full ${calculateRiskPct(pos.openPriceAvg, pos.markPrice, pos.liquidationPrice, isLong) > 80 ? 'bg-rose-500' :
-                                                                calculateRiskPct(pos.openPriceAvg, pos.markPrice, pos.liquidationPrice, isLong) > 50 ? 'bg-amber-500' : 'bg-emerald-500'
+                                                            calculateRiskPct(pos.openPriceAvg, pos.markPrice, pos.liquidationPrice, isLong) > 50 ? 'bg-amber-500' : 'bg-emerald-500'
                                                             }`}
                                                         style={{ width: `${calculateRiskPct(pos.openPriceAvg, pos.markPrice, pos.liquidationPrice, isLong)}%` }}
                                                     ></div>

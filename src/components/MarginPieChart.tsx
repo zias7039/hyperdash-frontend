@@ -16,7 +16,7 @@ export default function MarginPieChart({ data }: MarginPieChartProps) {
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-lg h-full flex flex-col">
+        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
             <h3 className="text-xl font-bold text-white mb-4">자산 분산 비율 (증거금)</h3>
             {data && data.length > 0 ? (
                 <div className="flex-1 w-full min-h-[300px]">
