@@ -1,6 +1,6 @@
 // src/components/TopBar.tsx
-import React, { useState } from 'react';
-import DataEditorModal from './DataEditorModal';
+import React from 'react';
+import Link from 'next/link';
 
 interface TopBarProps {
     equity: number;
@@ -8,13 +8,9 @@ interface TopBarProps {
     leverage: number;
     usdt_rate: number;
     total_invested: number;
-    history: { date: string; equity: number }[];
-    apiUrl: string;
-    onDataUpdated: () => void;
 }
 
-export default function TopBar({ equity, available, leverage, usdt_rate, total_invested, history, apiUrl, onDataUpdated }: TopBarProps) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+export default function TopBar({ equity, available, leverage, usdt_rate, total_invested }: TopBarProps) {
 
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
     const formatKRW = (usd: number) => new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(usd * usdt_rate);
@@ -27,13 +23,13 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
 
     return (
         <div className="flex flex-wrap items-center justify-between bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl mb-6 relative hover:-translate-y-1 transition-transform duration-300">
-            <button
-                onClick={() => setIsModalOpen(true)}
-                className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 transition-colors p-2"
-                title="데이터 수정"
+            <Link
+                href="/editor"
+                className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors p-2 text-xl"
+                title="데이터 수정 페이지로 이동"
             >
                 ⚙️
-            </button>
+            </Link>
             <div className="flex flex-col">
                 <span className="text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">총 자산</span>
                 <div className="flex items-baseline space-x-3">
@@ -61,15 +57,6 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
                     {leverage.toFixed(2)}x
                 </span>
             </div>
-
-            <DataEditorModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                currentInvested={total_invested}
-                initialHistory={history || []}
-                apiUrl={apiUrl}
-                onSuccess={onDataUpdated}
-            />
         </div>
     );
 }

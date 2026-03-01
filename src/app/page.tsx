@@ -93,9 +93,6 @@ export default function Dashboard() {
           leverage={metrics.leverage}
           usdt_rate={metrics.usdt_rate}
           total_invested={settings?.total_invested || 0}
-          history={data.history}
-          apiUrl={apiUrl}
-          onDataUpdated={handleDataUpdated}
         />
 
         {/* Main Content Grid */}
