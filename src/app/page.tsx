@@ -2,7 +2,7 @@
 
 import React from 'react';
 import useSWR from 'swr';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import TopBar from '@/components/TopBar';
 import LeftSummary from '@/components/LeftSummary';
 import PositionsTable from '@/components/PositionsTable';
@@ -67,7 +67,7 @@ export default function Dashboard() {
 
   const { metrics, positions, history, btc_benchmark, margin_distribution } = data;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -78,7 +78,7 @@ export default function Dashboard() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: {
       opacity: 1,
