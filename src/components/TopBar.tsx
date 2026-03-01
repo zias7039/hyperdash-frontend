@@ -1,6 +1,6 @@
 // src/components/TopBar.tsx
 import React, { useState } from 'react';
-import DataEntryModal from './DataEntryModal';
+import DataEditorModal from './DataEditorModal';
 
 interface TopBarProps {
     equity: number;
@@ -8,11 +8,12 @@ interface TopBarProps {
     leverage: number;
     usdt_rate: number;
     total_invested: number;
+    history: { date: string; equity: number }[];
     apiUrl: string;
     onDataUpdated: () => void;
 }
 
-export default function TopBar({ equity, available, leverage, usdt_rate, total_invested, apiUrl, onDataUpdated }: TopBarProps) {
+export default function TopBar({ equity, available, leverage, usdt_rate, total_invested, history, apiUrl, onDataUpdated }: TopBarProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
@@ -61,10 +62,11 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
                 </span>
             </div>
 
-            <DataEntryModal
+            <DataEditorModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 currentInvested={total_invested}
+                initialHistory={history || []}
                 apiUrl={apiUrl}
                 onSuccess={onDataUpdated}
             />
