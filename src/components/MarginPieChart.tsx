@@ -17,10 +17,10 @@ export default function MarginPieChart({ data }: MarginPieChartProps) {
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="glass-panel p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
-            <h3 className="text-xl font-bold text-white mb-4">자산 분산 비율 (증거금)</h3>
+        <div className="glass-panel p-4 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
+            <h3 className="text-lg font-bold text-white mb-2">자산 분산 비율 (증거금)</h3>
             {data && data.length > 0 ? (
-                <div className="flex-1 w-full min-h-[300px]">
+                <div className="flex-1 w-full min-h-[220px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie

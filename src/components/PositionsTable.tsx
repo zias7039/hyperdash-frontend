@@ -39,9 +39,9 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
     };
 
     return (
-        <div className="glass-panel mt-6 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-300">
-            <div className="p-5 border-b border-white/10 bg-zinc-900/40 flex items-center justify-between flex-wrap gap-4">
-                <h3 className="text-xl font-bold text-white tracking-wide">현재 포지션</h3>
+        <div className="glass-panel mt-4 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-300">
+            <div className="p-4 border-b border-white/10 bg-zinc-900/40 flex items-center justify-between flex-wrap gap-3">
+                <h3 className="text-lg font-bold text-white tracking-wide">현재 포지션</h3>
                 {btc_benchmark && (
                     <div className="flex items-center space-x-2 text-sm bg-zinc-800/50 px-3 py-1.5 rounded-lg border border-zinc-700/50">
                         <span className="text-zinc-400">BTC 벤치마크:</span>
@@ -58,19 +58,19 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
                 <table className="w-full text-sm text-left text-zinc-300">
                     <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/60 backdrop-blur border-b border-white/5">
                         <tr>
-                            <th className="px-6 py-4">심볼</th>
-                            <th className="px-6 py-4">포지션/레버리지</th>
-                            <th className="px-6 py-4 text-right">증거금</th>
-                            <th className="px-6 py-4 text-right">진입가</th>
-                            <th className="px-6 py-4 text-right">시장가</th>
-                            <th className="px-6 py-4 text-right">미실현 손익</th>
-                            <th className="px-6 py-4 text-right">청산가 & 위험도</th>
+                            <th className="px-4 py-3">심볼</th>
+                            <th className="px-4 py-3">포지션/레버리지</th>
+                            <th className="px-4 py-3 text-right">증거금</th>
+                            <th className="px-4 py-3 text-right">진입가</th>
+                            <th className="px-4 py-3 text-right">시장가</th>
+                            <th className="px-4 py-3 text-right">미실현 손익</th>
+                            <th className="px-4 py-3 text-right">청산가 & 위험도</th>
                         </tr>
                     </thead>
                     <tbody>
                         {positions.length === 0 ? (
                             <tr>
-                                <td colSpan={7} className="px-6 py-8 text-center text-zinc-500">
+                                <td colSpan={7} className="px-4 py-8 text-center text-zinc-500">
                                     보유 중인 포지션이 없습니다.
                                 </td>
                             </tr>
@@ -82,21 +82,21 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
 
                                 return (
                                     <tr key={idx} className="border-b border-zinc-800 hover:bg-zinc-800/30 transition-colors">
-                                        <td className="px-6 py-4 font-bold text-white">{pos.symbol}</td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-4 py-3 font-bold text-white">{pos.symbol}</td>
+                                        <td className="px-4 py-3">
                                             <span className={`px-2 py-1 rounded text-xs font-bold mr-2 ${isLong ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
                                                 {pos.holdSide.toUpperCase()}
                                             </span>
                                             <span className="text-zinc-400">{pos.leverage}x</span>
                                         </td>
-                                        <td className="px-6 py-4 text-right font-medium">{formatCurrency(pos.marginSize)}</td>
-                                        <td className="px-6 py-4 text-right">{formatNum(pos.openPriceAvg)}</td>
-                                        <td className="px-6 py-4 text-right">{formatNum(pos.markPrice)}</td>
-                                        <td className={`px-6 py-4 text-right font-bold ${pnlClass}`}>
+                                        <td className="px-4 py-3 text-right font-medium">{formatCurrency(pos.marginSize)}</td>
+                                        <td className="px-4 py-3 text-right">{formatNum(pos.openPriceAvg)}</td>
+                                        <td className="px-4 py-3 text-right">{formatNum(pos.markPrice)}</td>
+                                        <td className={`px-4 py-3 text-right font-bold ${pnlClass}`}>
                                             {pnl > 0 ? '+' : ''}{formatCurrency(pnl)}
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="text-orange-400 mb-1">{formatNum(pos.liquidationPrice)}</div>
+                                        <td className="px-4 py-3 text-right">
+                                            <div className="text-orange-400 mb-1 leading-tight">{formatNum(pos.liquidationPrice)}</div>
                                             {Number(pos.liquidationPrice) > 0 && (
                                                 <div className="w-full bg-zinc-800 rounded-full h-1.5 overflow-hidden flex items-center justify-end">
                                                     <div

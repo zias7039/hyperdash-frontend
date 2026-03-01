@@ -18,8 +18,8 @@ export default function NavChart({ history }: NavChartProps) {
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="glass-panel p-6 h-full min-h-[400px] flex flex-col hover:-translate-y-1 transition-transform duration-300">
-            <h3 className="text-xl font-bold text-white mb-4">자산 & NAV 히스토리</h3>
+        <div className="glass-panel p-4 h-full min-h-[300px] flex flex-col hover:-translate-y-1 transition-transform duration-300">
+            <h3 className="text-lg font-bold text-white mb-2">자산 & NAV 히스토리</h3>
             {history.length > 0 ? (
                 <div className="flex-1 w-full min-h-0">
                     <ResponsiveContainer width="100%" height="100%">

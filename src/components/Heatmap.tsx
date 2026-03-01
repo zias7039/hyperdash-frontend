@@ -33,10 +33,10 @@ export default function Heatmap({ history }: HeatmapProps) {
     };
 
     return (
-        <div className="glass-panel p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
-            <h3 className="text-xl font-bold text-white mb-4">일일 손익 히트맵</h3>
+        <div className="glass-panel p-4 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
+            <h3 className="text-lg font-bold text-white mb-2">일일 손익 히트맵</h3>
             {recentHistory.length > 0 ? (
-                <div className="flex-1 flex flex-wrap gap-1.5 items-end justify-start overflow-hidden">
+                <div className="flex-1 flex flex-wrap gap-1 items-end justify-start overflow-hidden">
                     {recentHistory.map((day, idx) => (
                         <div
                             key={idx}

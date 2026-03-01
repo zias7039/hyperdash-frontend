@@ -124,10 +124,10 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch">
 
           {/* Left Column - Summary & Pie Chart */}
-          <div className="lg:col-span-1 h-full flex flex-col gap-6">
+          <div className="lg:col-span-1 h-full flex flex-col gap-4">
             <motion.div variants={itemVariants} className="flex-1">
               <LeftSummary
                 equity={metrics.equity}
@@ -138,18 +138,18 @@ export default function Dashboard() {
                 usdt_rate={metrics.usdt_rate}
               />
             </motion.div>
-            <motion.div variants={itemVariants} className="h-72 lg:h-80">
+            <motion.div variants={itemVariants} className="h-56 lg:h-64">
               <MarginPieChart data={margin_distribution} />
             </motion.div>
           </div>
 
           {/* Right Column - Chart & Heatmap */}
-          <div className="lg:col-span-3 h-full flex flex-col gap-6">
+          <div className="lg:col-span-3 h-full flex flex-col gap-4">
             <motion.div variants={itemVariants} className="flex-[3]">
               <NavChart history={history} />
             </motion.div>
 
-            <div className="flex-[1] flex gap-6">
+            <div className="flex-[1] flex gap-4">
               <motion.div variants={itemVariants} className="flex-[2]">
                 <Heatmap history={history} />
               </motion.div>
