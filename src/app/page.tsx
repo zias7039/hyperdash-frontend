@@ -123,12 +123,12 @@ export default function Dashboard() {
           />
         </motion.div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch">
+        {/* Main Content Grid - V6 Perfectly Aligned Layout */}
+        <div className="flex flex-col gap-4">
 
-          {/* Left Column - Summary & Pie Chart */}
-          <div className="lg:col-span-1 h-full flex flex-col gap-4">
-            <motion.div variants={itemVariants} className="flex-1">
+          {/* Row 1: LeftSummary (25%) + NavChart (75%) */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch h-auto lg:h-[400px]">
+            <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
               <LeftSummary
                 equity={metrics.equity}
                 usage_pct={metrics.usage_pct}
@@ -138,25 +138,22 @@ export default function Dashboard() {
                 usdt_rate={metrics.usdt_rate}
               />
             </motion.div>
-            <motion.div variants={itemVariants} className="h-56 lg:h-64">
-              <MarginPieChart data={margin_distribution} />
+            <motion.div variants={itemVariants} className="lg:col-span-3 h-full">
+              <NavChart history={history} />
             </motion.div>
           </div>
 
-          {/* Right Column - Chart & Heatmap */}
-          <div className="lg:col-span-3 h-full flex flex-col gap-4">
-            <motion.div variants={itemVariants} className="flex-[3]">
-              <NavChart history={history} />
+          {/* Row 2: MarginPieChart (25%) + Heatmap (50%) + MonthlyReturn (25%) */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch h-auto lg:h-[260px]">
+            <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
+              <MarginPieChart data={margin_distribution} />
             </motion.div>
-
-            <div className="flex-[1] flex gap-4">
-              <motion.div variants={itemVariants} className="flex-[2]">
-                <Heatmap history={history} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="flex-[1]">
-                <MonthlyReturn history={history} />
-              </motion.div>
-            </div>
+            <motion.div variants={itemVariants} className="lg:col-span-2 h-full">
+              <Heatmap history={history} />
+            </motion.div>
+            <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
+              <MonthlyReturn history={history} />
+            </motion.div>
           </div>
         </div>
 
