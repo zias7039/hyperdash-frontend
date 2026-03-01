@@ -127,7 +127,7 @@ export default function Dashboard() {
         <div className="flex flex-col gap-4">
 
           {/* Row 1: LeftSummary (25%) + NavChart (75%) */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch h-auto lg:h-[400px]">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[400px]">
             <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
               <LeftSummary
                 equity={metrics.equity}
@@ -144,7 +144,7 @@ export default function Dashboard() {
           </div>
 
           {/* Row 2: MarginPieChart (25%) + Heatmap (50%) + MonthlyReturn (25%) */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch h-auto lg:h-[260px]">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[260px]">
             <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
               <MarginPieChart data={margin_distribution} />
             </motion.div>
