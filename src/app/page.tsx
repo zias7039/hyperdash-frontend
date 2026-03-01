@@ -14,10 +14,17 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function Dashboard() {
   // Fetch data every 10 seconds using environment variable
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-  const { data, error, isLoading } = useSWR(`${apiUrl}/api/dashboard`, fetcher, {
+  const { data, error, isLoading, mutate: mutateDashboard } = useSWR(`${apiUrl}/api/dashboard`, fetcher, {
     refreshInterval: 10000,
     revalidateOnFocus: true,
   });
+
+  const { data: settings, mutate: mutateSettings } = useSWR(`${apiUrl}/api/settings`, fetcher);
+
+  const handleDataUpdated = () => {
+    mutateSettings();
+    mutateDashboard();
+  };
 
   if (error) {
     return (
@@ -84,6 +91,9 @@ export default function Dashboard() {
           available={metrics.available}
           leverage={metrics.leverage}
           usdt_rate={metrics.usdt_rate}
+          total_invested={settings?.total_invested || 0}
+          apiUrl={apiUrl}
+          onDataUpdated={handleDataUpdated}
         />
 
         {/* Main Content Grid */}
