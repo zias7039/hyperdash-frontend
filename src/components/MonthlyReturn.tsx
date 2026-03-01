@@ -51,7 +51,7 @@ export default function MonthlyReturn({ history }: MonthlyReturnProps) {
     const monthlyData = calculateMonthlyReturns();
 
     return (
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
             <h3 className="text-xl font-bold text-white mb-4">월별 수익률</h3>
             {monthlyData.length > 0 ? (
                 <div className="flex-1 flex flex-col gap-3 justify-center">

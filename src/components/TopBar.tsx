@@ -22,7 +22,7 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
     const roi = calcROI();
 
     return (
-        <div className="flex flex-wrap items-center justify-between bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl mb-6 relative hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-6 mb-6 relative hover:-translate-y-1 transition-transform duration-300 flex flex-wrap items-center justify-between">
             <Link
                 href="/editor"
                 className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors p-2 text-xl"

@@ -10,13 +10,14 @@ interface MarginPieChartProps {
     data: MarginItem[];
 }
 
-const COLORS = ['#818cf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#60a5fa', '#f472b6', '#3fddfc'];
+// Hyper-premium neon palette
+const COLORS = ['#6366f1', '#10b981', '#f43f5e', '#8b5cf6', '#0ea5e9', '#f59e0b', '#ec4899', '#14b8a6'];
 
 export default function MarginPieChart({ data }: MarginPieChartProps) {
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
             <h3 className="text-xl font-bold text-white mb-4">자산 분산 비율 (증거금)</h3>
             {data && data.length > 0 ? (
                 <div className="flex-1 w-full min-h-[300px]">
@@ -38,8 +39,8 @@ export default function MarginPieChart({ data }: MarginPieChartProps) {
                             </Pie>
                             <Tooltip
                                 formatter={(value: any) => formatCurrency(Number(value) || 0)}
-                                contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#f4f4f5' }}
-                                itemStyle={{ color: '#fff' }}
+                                contentStyle={{ backgroundColor: 'rgba(20,20,22,0.8)', borderColor: 'rgba(255,255,255,0.1)', color: '#f4f4f5', borderRadius: '12px', backdropFilter: 'blur(10px)' }}
+                                itemStyle={{ color: '#fff', fontWeight: 'bold' }}
                             />
                             <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#a1a1aa', fontSize: '13px' }} />
                         </PieChart>

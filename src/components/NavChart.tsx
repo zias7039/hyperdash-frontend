@@ -18,7 +18,7 @@ export default function NavChart({ history }: NavChartProps) {
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl h-full min-h-[400px] flex flex-col hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-6 h-full min-h-[400px] flex flex-col hover:-translate-y-1 transition-transform duration-300">
             <h3 className="text-xl font-bold text-white mb-4">자산 & NAV 히스토리</h3>
             {history.length > 0 ? (
                 <div className="flex-1 w-full min-h-0">
@@ -26,15 +26,14 @@ export default function NavChart({ history }: NavChartProps) {
                         <AreaChart data={history} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                             <defs>
                                 <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#818cf8" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                                 </linearGradient>
                                 <linearGradient id="colorBtc" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.15} />
-                                    <stop offset="95%" stopColor="#fbbf24" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
+                                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
                             <XAxis
                                 dataKey="date"
                                 stroke="#a1a1aa"
@@ -59,8 +58,8 @@ export default function NavChart({ history }: NavChartProps) {
                                 tickFormatter={(val) => `$${val}`}
                             />
                             <Tooltip
-                                contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#f4f4f5' }}
-                                itemStyle={{ color: '#818cf8' }}
+                                contentStyle={{ backgroundColor: 'rgba(20,20,22,0.8)', borderColor: 'rgba(255,255,255,0.1)', color: '#f4f4f5', borderRadius: '12px', backdropFilter: 'blur(10px)' }}
+                                itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
                                 formatter={(value: any, name: string | undefined) => {
                                     if (name === 'equity') return [formatCurrency(Number(value) || 0), '내 자산'];
                                     if (name === 'btc_nav') return [formatCurrency(Number(value) || 0), 'BTC 벤치마크'];
@@ -70,7 +69,7 @@ export default function NavChart({ history }: NavChartProps) {
                             <Area
                                 type="monotone"
                                 dataKey="btc_nav"
-                                stroke="#fbbf24"
+                                stroke="#6366f1"
                                 strokeWidth={2}
                                 strokeDasharray="5 5"
                                 fillOpacity={1}
@@ -81,7 +80,7 @@ export default function NavChart({ history }: NavChartProps) {
                             <Area
                                 type="monotone"
                                 dataKey="equity"
-                                stroke="#818cf8"
+                                stroke="#10b981"
                                 strokeWidth={3}
                                 fillOpacity={1}
                                 fill="url(#colorEquity)"

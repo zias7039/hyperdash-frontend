@@ -2,6 +2,7 @@
 
 import React from 'react';
 import useSWR from 'swr';
+import { motion } from 'framer-motion';
 import TopBar from '@/components/TopBar';
 import LeftSummary from '@/components/LeftSummary';
 import PositionsTable from '@/components/PositionsTable';
@@ -66,12 +67,37 @@ export default function Dashboard() {
 
   const { metrics, positions, history, btc_benchmark, margin_distribution } = data;
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white p-6 font-sans selection:bg-indigo-500/30">
-      <div className="max-w-[1600px] mx-auto space-y-6">
+      <motion.div
+        className="max-w-[1600px] mx-auto space-y-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
 
         {/* Header */}
-        <header className="flex items-center justify-between mb-8">
+        <motion.header variants={itemVariants} className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.5)]">
               <span className="text-xl font-black text-white">⚡</span>
@@ -84,54 +110,62 @@ export default function Dashboard() {
             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse"></div>
             <span>실시간 동기화 중</span>
           </div>
-        </header>
+        </motion.header>
 
         {/* Top Metrics Row */}
-        <TopBar
-          equity={metrics.equity}
-          available={metrics.available}
-          leverage={metrics.leverage}
-          usdt_rate={metrics.usdt_rate}
-          total_invested={settings?.total_invested || 0}
-        />
+        <motion.div variants={itemVariants}>
+          <TopBar
+            equity={metrics.equity}
+            available={metrics.available}
+            leverage={metrics.leverage}
+            usdt_rate={metrics.usdt_rate}
+            total_invested={settings?.total_invested || 0}
+          />
+        </motion.div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
 
           {/* Left Column - Summary & Pie Chart */}
           <div className="lg:col-span-1 h-full flex flex-col gap-6">
-            <LeftSummary
-              equity={metrics.equity}
-              usage_pct={metrics.usage_pct}
-              upl_pnl={metrics.upl_pnl}
-              roe={metrics.roe}
-              pos_data={positions}
-              usdt_rate={metrics.usdt_rate}
-            />
-            <MarginPieChart data={margin_distribution} />
+            <motion.div variants={itemVariants} className="flex-1">
+              <LeftSummary
+                equity={metrics.equity}
+                usage_pct={metrics.usage_pct}
+                upl_pnl={metrics.upl_pnl}
+                roe={metrics.roe}
+                pos_data={positions}
+                usdt_rate={metrics.usdt_rate}
+              />
+            </motion.div>
+            <motion.div variants={itemVariants} className="h-72 lg:h-80">
+              <MarginPieChart data={margin_distribution} />
+            </motion.div>
           </div>
 
           {/* Right Column - Chart & Heatmap */}
           <div className="lg:col-span-3 h-full flex flex-col gap-6">
-            <div className="flex-[3]">
+            <motion.div variants={itemVariants} className="flex-[3]">
               <NavChart history={history} />
-            </div>
+            </motion.div>
 
             <div className="flex-[1] flex gap-6">
-              <div className="flex-[2]">
+              <motion.div variants={itemVariants} className="flex-[2]">
                 <Heatmap history={history} />
-              </div>
-              <div className="flex-[1]">
+              </motion.div>
+              <motion.div variants={itemVariants} className="flex-[1]">
                 <MonthlyReturn history={history} />
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
 
         {/* Bottom Section - Positions */}
-        <PositionsTable positions={positions} btc_benchmark={btc_benchmark} />
+        <motion.div variants={itemVariants}>
+          <PositionsTable positions={positions} btc_benchmark={btc_benchmark} />
+        </motion.div>
 
-      </div>
+      </motion.div>
     </div>
   );
 }

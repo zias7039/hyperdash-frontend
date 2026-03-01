@@ -22,7 +22,7 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl h-full hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-6 h-full hover:-translate-y-1 transition-transform duration-300">
             <h3 className="text-xl font-bold text-white mb-6 flex items-center">
                 <Activity className="w-5 h-5 mr-2 text-indigo-400" />
                 요약

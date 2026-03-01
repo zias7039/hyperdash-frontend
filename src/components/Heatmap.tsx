@@ -19,21 +19,21 @@ export default function Heatmap({ history }: HeatmapProps) {
     const recentHistory = history.slice(-120);
 
     const getColorClass = (pnl?: number) => {
-        if (pnl === undefined || pnl === 0) return 'bg-zinc-800';
+        if (pnl === undefined || pnl === 0) return 'bg-zinc-800/60';
         if (pnl > 0) {
-            if (pnl > 500) return 'bg-emerald-400';
-            if (pnl > 100) return 'bg-emerald-500';
-            if (pnl > 0) return 'bg-emerald-600';
+            if (pnl > 500) return 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]'; // Neon bright
+            if (pnl > 100) return 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]';
+            if (pnl > 0) return 'bg-emerald-700/80';
         } else {
-            if (pnl < -500) return 'bg-rose-500';
-            if (pnl < -100) return 'bg-rose-600';
-            if (pnl < 0) return 'bg-rose-700';
+            if (pnl < -500) return 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]';
+            if (pnl < -100) return 'bg-rose-600 shadow-[0_0_5px_rgba(225,29,72,0.5)]';
+            if (pnl < 0) return 'bg-rose-800/80';
         }
-        return 'bg-zinc-800';
+        return 'bg-zinc-800/60';
     };
 
     return (
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
             <h3 className="text-xl font-bold text-white mb-4">일일 손익 히트맵</h3>
             {recentHistory.length > 0 ? (
                 <div className="flex-1 flex flex-wrap gap-1.5 items-end justify-start overflow-hidden">
@@ -42,9 +42,9 @@ export default function Heatmap({ history }: HeatmapProps) {
                             key={idx}
                             className={`w-4 h-4 rounded-sm ${getColorClass(day.daily_pnl)} transition-opacity hover:opacity-75 cursor-help group relative`}
                         >
-                            <div className="absolute font-sans bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-zinc-800 text-xs text-white rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                            <div className="absolute font-sans bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-3 py-1.5 bg-zinc-900/90 backdrop-blur-md border border-white/10 text-xs text-white rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                                 <span className="text-zinc-400 mr-2">{day.date}</span>
-                                <span className={day.daily_pnl && day.daily_pnl > 0 ? 'text-emerald-400' : 'text-rose-400'}>
+                                <span className={`font-bold ${day.daily_pnl && day.daily_pnl > 0 ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.8)]'}`}>
                                     {day.daily_pnl && day.daily_pnl > 0 ? '+' : ''}{formatCurrency(day.daily_pnl || 0)}
                                 </span>
                             </div>

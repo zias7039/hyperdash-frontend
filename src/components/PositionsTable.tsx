@@ -39,7 +39,7 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
     };
 
     return (
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl mt-6 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-300">
+        <div className="glass-panel mt-6 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-300">
             <div className="p-5 border-b border-white/10 bg-zinc-900/40 flex items-center justify-between flex-wrap gap-4">
                 <h3 className="text-xl font-bold text-white tracking-wide">현재 포지션</h3>
                 {btc_benchmark && (
