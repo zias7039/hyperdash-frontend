@@ -8,6 +8,7 @@ import PositionsTable from '@/components/PositionsTable';
 import NavChart from '@/components/NavChart';
 import MarginPieChart from '@/components/MarginPieChart';
 import Heatmap from '@/components/Heatmap';
+import MonthlyReturn from '@/components/MonthlyReturn';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -117,8 +118,14 @@ export default function Dashboard() {
             <div className="flex-[3]">
               <NavChart history={history} />
             </div>
-            <div className="flex-[1]">
-              <Heatmap history={history} />
+
+            <div className="flex-[1] flex gap-6">
+              <div className="flex-[2]">
+                <Heatmap history={history} />
+              </div>
+              <div className="flex-[1]">
+                <MonthlyReturn history={history} />
+              </div>
             </div>
           </div>
         </div>
