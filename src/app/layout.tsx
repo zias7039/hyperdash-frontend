@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR, Outfit } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
-
-const notoSansKr = Noto_Sans_KR({
-  variable: "--font-noto-sans-kr",
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-});
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -27,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${outfit.className} ${notoSansKr.variable} antialiased bg-black text-zinc-100`}
+        className={`${outfit.variable} antialiased bg-black text-zinc-100`}
       >
         {children}
       </body>
