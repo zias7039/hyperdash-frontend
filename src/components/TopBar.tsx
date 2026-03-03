@@ -57,6 +57,13 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
                     {leverage.toFixed(2)}x
                 </span>
             </div>
+
+            <div className="flex flex-col items-end pr-10 text-right">
+                <span className="text-zinc-400 text-xs font-medium uppercase tracking-wider mb-1">USDT/KRW</span>
+                <span className="text-lg font-bold text-sky-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]">
+                    ₩{usdt_rate.toLocaleString('ko-KR', { maximumFractionDigits: 2 })}
+                </span>
+            </div>
         </div>
     );
 }
