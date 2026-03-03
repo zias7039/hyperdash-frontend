@@ -10,6 +10,7 @@ import NavChart from '@/components/NavChart';
 import MarginPieChart from '@/components/MarginPieChart';
 import Heatmap from '@/components/Heatmap';
 import MonthlyReturn from '@/components/MonthlyReturn';
+import RelativeReturnChart from '@/components/RelativeReturnChart';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -142,6 +143,11 @@ export default function Dashboard() {
               <NavChart history={history} />
             </motion.div>
           </div>
+
+          {/* Row 1.5: BTC vs Portfolio Relative Return (Full Width) */}
+          <motion.div variants={itemVariants} className="lg:min-h-[260px]">
+            <RelativeReturnChart history={history} />
+          </motion.div>
 
           {/* Row 2: MarginPieChart (25%) + Heatmap (50%) + MonthlyReturn (25%) */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[260px]">
