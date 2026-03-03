@@ -9,6 +9,7 @@ interface HistoryRecord {
     btc_nav?: number;
     btc_price?: number;
     return_pct?: number;
+    btc_return_pct?: number | null;
     invested_capital?: number;
 }
 
@@ -23,17 +24,13 @@ export default function NavChart({ history }: NavChartProps) {
 
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
-    // Build return data from backend's return_pct + BTC return
+    // Build return data from backend's return_pct + btc_return_pct
     const returnData = useMemo(() => {
         if (!history || history.length === 0) return [];
-        const firstBtcPrice = history.find(h => h.btc_price && h.btc_price > 0)?.btc_price;
 
         return history.map(record => {
-            let btcReturn: number | null = null;
-            if (firstBtcPrice && record.btc_price && record.btc_price > 0) {
-                btcReturn = parseFloat((((record.btc_price - firstBtcPrice) / firstBtcPrice) * 100).toFixed(2));
-            }
             const myReturn = record.return_pct ?? 0;
+            const btcReturn = record.btc_return_pct ?? null;
             return {
                 date: record.date,
                 myReturn,
