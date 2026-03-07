@@ -8,9 +8,10 @@ interface TopBarProps {
     leverage: number;
     usdt_rate: number;
     total_invested: number;
+    btc_return?: number | null;
 }
 
-export default function TopBar({ equity, available, leverage, usdt_rate, total_invested }: TopBarProps) {
+export default function TopBar({ equity, available, leverage, usdt_rate, total_invested, btc_return }: TopBarProps) {
 
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
     const formatKRW = (usd: number) => new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(usd * usdt_rate);
@@ -43,7 +44,11 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
                 <span className={`text-xl font-black drop-shadow-md ${roi >= 0 ? 'text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.4)]' : 'text-rose-400 drop-shadow-[0_0_12px_rgba(251,113,133,0.4)]'}`}>
                     {roi > 0 ? '+' : ''}{roi.toFixed(2)}%
                 </span>
-                <span className="text-[10px] text-zinc-500 font-medium">원금: {formatCurrency(total_invested)} <span className="text-zinc-600">({formatKRW(total_invested)})</span></span>
+                <div className="flex items-center gap-2 mt-1">
+                    <span className="text-[10px] text-zinc-500 font-medium tracking-wide">
+                        벤치마크 (BTC): <span className={`font-bold ${btc_return !== undefined && btc_return !== null && btc_return >= 0 ? 'text-indigo-400' : 'text-rose-400'}`}>{btc_return !== undefined && btc_return !== null ? (btc_return > 0 ? '+' : '') + btc_return.toFixed(2) + '%' : '- %'}</span>
+                    </span>
+                </div>
             </div>
 
             <div className="flex flex-col items-end">

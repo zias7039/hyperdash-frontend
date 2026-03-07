@@ -127,6 +127,7 @@ export default function Dashboard() {
             leverage={metrics.leverage}
             usdt_rate={metrics.usdt_rate}
             total_invested={settings?.total_invested || 0}
+            btc_return={history && history.length > 0 ? history[history.length - 1].btc_return_pct : null}
           />
         </motion.div>
 
