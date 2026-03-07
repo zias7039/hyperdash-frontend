@@ -33,12 +33,12 @@ export default function EditorPage() {
             setInvestedAmount(settingsData.total_invested.toString());
         }
         if (dashboardData && dashboardData.history) {
-            setHistoryData([...dashboardData.history]);
+            const sortedHistory = [...dashboardData.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            setHistoryData(sortedHistory);
         }
         if (depositsDataRaw) {
-            // Ensure deposits are sorted by date
-            const sorted = [...depositsDataRaw].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-            setDepositsData(sorted);
+            const sortedDeposits = [...depositsDataRaw].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            setDepositsData(sortedDeposits);
         }
     }, [dashboardData, settingsData, depositsDataRaw]);
 
@@ -64,7 +64,7 @@ export default function EditorPage() {
 
     const handleAddHistoryRow = () => {
         const today = new Date().toISOString().split('T')[0];
-        setHistoryData([...historyData, { date: today, equity: 0 }]);
+        setHistoryData([{ date: today, equity: 0 }, ...historyData]);
     };
 
     const handleRemoveHistoryRow = (index: number) => {
@@ -75,7 +75,7 @@ export default function EditorPage() {
 
     const handleAddDepositRow = () => {
         const today = new Date().toISOString().split('T')[0];
-        setDepositsData([...depositsData, { date: today, type: 'deposit', amount: 0 }]);
+        setDepositsData([{ date: today, type: 'deposit', amount: 0 }, ...depositsData]);
     };
 
     const handleRemoveDepositRow = (index: number) => {
@@ -135,7 +135,7 @@ export default function EditorPage() {
 
     return (
         <div className="min-h-screen bg-black text-white p-4 sm:p-8 flex flex-col items-center">
-            <div className="w-full max-w-5xl bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col shadow-2xl overflow-hidden mt-8">
+            <div className="w-full max-w-7xl bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col shadow-2xl overflow-hidden mt-2 scale-[0.95] origin-top">
 
                 {/* Header */}
                 <div className="flex justify-between items-center p-6 border-b border-white/10 bg-zinc-900/40">
@@ -150,106 +150,110 @@ export default function EditorPage() {
                     </Link>
                 </div>
 
-                {/* Body */}
-                <div className="p-8 space-y-8">
-                    {/* Invested Section */}
-                    <div className="bg-zinc-800/30 border border-white/5 rounded-xl p-6">
-                        <label className="block text-sm font-medium text-emerald-400 mb-2 uppercase tracking-wide drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
-                            누적 총 투자 원금 (USD)
-                        </label>
-                        <div className="flex items-center gap-3 max-w-sm">
-                            <div className="relative flex-1">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">$</span>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    value={investedAmount}
-                                    onChange={(e) => setInvestedAmount(e.target.value)}
-                                    className="w-full bg-zinc-950/80 border border-zinc-700/80 rounded-lg py-3 pl-9 pr-4 text-white text-xl font-bold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-inner"
-                                />
+                {/* Body - Side by Side Layout */}
+                <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+                    {/* Left Column: Invested & Deposits */}
+                    <div className="flex flex-col gap-8">
+                        {/* Invested Section */}
+                        <div className="bg-zinc-800/30 border border-white/5 rounded-xl p-6">
+                            <label className="block text-sm font-medium text-emerald-400 mb-2 uppercase tracking-wide drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
+                                누적 총 투자 원금 (USD)
+                            </label>
+                            <div className="flex items-center gap-3 max-w-sm">
+                                <div className="relative flex-1">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">$</span>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={investedAmount}
+                                        onChange={(e) => setInvestedAmount(e.target.value)}
+                                        className="w-full bg-zinc-950/80 border border-zinc-700/80 rounded-lg py-3 pl-9 pr-4 text-white text-xl font-bold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-inner"
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Deposits Grid Section */}
-                    <div className="bg-zinc-800/30 border border-white/5 rounded-xl flex flex-col overflow-hidden">
-                        <div className="p-5 border-b border-white/5 bg-zinc-900/50 flex justify-between items-center">
-                            <label className="text-sm font-medium text-amber-400 uppercase tracking-wide drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
-                                입출금 내역 (Deposits & Withdrawals)
-                            </label>
-                            <button
-                                onClick={handleAddDepositRow}
-                                className="text-sm bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-1 border border-amber-500/20 hover:border-amber-500 hover:shadow-[0_0_15px_rgba(251,191,36,0.5)]"
-                            >
-                                <span>+</span> 새로운 내역 추가
-                            </button>
-                        </div>
+                        {/* Deposits Grid Section */}
+                        <div className="bg-zinc-800/30 border border-white/5 rounded-xl flex flex-col overflow-hidden">
+                            <div className="p-5 border-b border-white/5 bg-zinc-900/50 flex justify-between items-center">
+                                <label className="text-sm font-medium text-amber-400 uppercase tracking-wide drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
+                                    입출금 내역 (Deposits & Withdrawals)
+                                </label>
+                                <button
+                                    onClick={handleAddDepositRow}
+                                    className="text-sm bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-1 border border-amber-500/20 hover:border-amber-500 hover:shadow-[0_0_15px_rgba(251,191,36,0.5)]"
+                                >
+                                    <span>+</span> 새로운 내역 추가
+                                </button>
+                            </div>
 
-                        <div className="overflow-x-auto max-h-[400px] overflow-y-auto custom-scrollbar">
-                            <table className="w-full text-left border-collapse">
-                                <thead className="sticky top-0 z-10">
-                                    <tr className="bg-zinc-900/90 backdrop-blur-md text-zinc-400 text-xs uppercase tracking-wider shadow-md">
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-20 text-center">No.</th>
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800">날짜 (YYYY-MM-DD)</th>
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-40 text-center">종류</th>
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800">금액 (USD)</th>
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-28 text-center">삭제</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {depositsData.map((row, idx) => (
-                                        <tr key={idx} className="border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors group">
-                                            <td className="px-6 py-3 text-center text-zinc-600 font-mono text-sm">{idx + 1}</td>
-                                            <td className="px-6 py-3">
-                                                <input
-                                                    type="text"
-                                                    placeholder="2024-01-01"
-                                                    value={row.date}
-                                                    onChange={(e) => handleDepositChange(idx, 'date', e.target.value)}
-                                                    className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
-                                                />
-                                            </td>
-                                            <td className="px-6 py-3 text-center">
-                                                <select
-                                                    value={row.type}
-                                                    onChange={(e) => handleDepositChange(idx, 'type', e.target.value)}
-                                                    className={`w-full bg-zinc-900 border ${row.type === 'deposit' ? 'border-emerald-500/50 text-emerald-400' : 'border-rose-500/50 text-rose-400'} rounded-md px-3 py-2 text-sm font-bold focus:outline-none focus:border-amber-500 cursor-pointer`}
-                                                >
-                                                    <option value="deposit">입금 (+)</option>
-                                                    <option value="withdrawal">출금 (-)</option>
-                                                </select>
-                                            </td>
-                                            <td className="px-6 py-3">
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">$</span>
+                            <div className="overflow-x-auto max-h-[400px] overflow-y-auto custom-scrollbar">
+                                <table className="w-full text-left border-collapse">
+                                    <thead className="sticky top-0 z-10">
+                                        <tr className="bg-zinc-900/90 backdrop-blur-md text-zinc-400 text-xs uppercase tracking-wider shadow-md">
+                                            <th className="px-6 py-4 font-medium border-b border-zinc-800 w-20 text-center">No.</th>
+                                            <th className="px-6 py-4 font-medium border-b border-zinc-800">날짜 (YYYY-MM-DD)</th>
+                                            <th className="px-6 py-4 font-medium border-b border-zinc-800 w-40 text-center">종류</th>
+                                            <th className="px-6 py-4 font-medium border-b border-zinc-800">금액 (USD)</th>
+                                            <th className="px-6 py-4 font-medium border-b border-zinc-800 w-28 text-center">삭제</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {depositsData.map((row, idx) => (
+                                            <tr key={idx} className="border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors group">
+                                                <td className="px-6 py-3 text-center text-zinc-600 font-mono text-sm">{idx + 1}</td>
+                                                <td className="px-6 py-3">
                                                     <input
-                                                        type="number"
-                                                        value={row.amount}
-                                                        onChange={(e) => handleDepositChange(idx, 'amount', e.target.value)}
-                                                        className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                        type="text"
+                                                        placeholder="2024-01-01"
+                                                        value={row.date}
+                                                        onChange={(e) => handleDepositChange(idx, 'date', e.target.value)}
+                                                        className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
                                                     />
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-3 text-center">
-                                                <button
-                                                    onClick={() => handleRemoveDepositRow(idx)}
-                                                    className="text-zinc-600 hover:text-white hover:bg-rose-500 rounded-md p-1.5 transition-colors"
-                                                    title="행 삭제"
-                                                >
-                                                    ✕
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {depositsData.length === 0 && (
-                                        <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center text-zinc-500 font-medium">
-                                                입출금 내역이 없습니다.
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                                </td>
+                                                <td className="px-6 py-3 text-center">
+                                                    <select
+                                                        value={row.type}
+                                                        onChange={(e) => handleDepositChange(idx, 'type', e.target.value)}
+                                                        className={`w-full bg-zinc-900 border ${row.type === 'deposit' ? 'border-emerald-500/50 text-emerald-400' : 'border-rose-500/50 text-rose-400'} rounded-md px-3 py-2 text-sm font-bold focus:outline-none focus:border-amber-500 cursor-pointer`}
+                                                    >
+                                                        <option value="deposit">입금 (+)</option>
+                                                        <option value="withdrawal">출금 (-)</option>
+                                                    </select>
+                                                </td>
+                                                <td className="px-6 py-3">
+                                                    <div className="relative">
+                                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">$</span>
+                                                        <input
+                                                            type="number"
+                                                            value={row.amount}
+                                                            onChange={(e) => handleDepositChange(idx, 'amount', e.target.value)}
+                                                            className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-3 text-center">
+                                                    <button
+                                                        onClick={() => handleRemoveDepositRow(idx)}
+                                                        className="text-zinc-600 hover:text-white hover:bg-rose-500 rounded-md p-1.5 transition-colors"
+                                                        title="행 삭제"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {depositsData.length === 0 && (
+                                            <tr>
+                                                <td colSpan={5} className="px-6 py-12 text-center text-zinc-500 font-medium">
+                                                    입출금 내역이 없습니다.
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -323,6 +327,7 @@ export default function EditorPage() {
                             </table>
                         </div>
                     </div>
+                    {/* End of Left & Right Columns */}
                 </div>
 
                 {/* Footer */}
