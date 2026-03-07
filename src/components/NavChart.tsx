@@ -83,10 +83,6 @@ export default function NavChart({ history }: NavChartProps) {
                                         <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
                                         <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                                     </linearGradient>
-                                    <linearGradient id="colorBtc" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
                                 </defs>
                                 <XAxis dataKey="date" stroke="#a1a1aa" tick={{ fill: '#a1a1aa', fontSize: 11 }} tickLine={false} axisLine={false}
                                     tickFormatter={(val) => { try { const d = new Date(val); return `${d.getMonth() + 1}/${d.getDate()}`; } catch { return val; } }}
@@ -97,11 +93,9 @@ export default function NavChart({ history }: NavChartProps) {
                                     itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
                                     formatter={(value: any, name: string | undefined) => {
                                         if (name === 'equity') return [formatCurrency(Number(value) || 0), '내 자산'];
-                                        if (name === 'btc_nav') return [formatCurrency(Number(value) || 0), 'BTC 벤치마크'];
                                         return [value, name || ''];
                                     }}
                                 />
-                                <Area type="monotone" dataKey="btc_nav" stroke="#6366f1" strokeWidth={2} strokeDasharray="5 5" fillOpacity={1} fill="url(#colorBtc)" animationDuration={1000} connectNulls={true} />
                                 <Area type="monotone" dataKey="equity" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorEquity)" animationDuration={1000} connectNulls={true} />
                             </AreaChart>
                         ) : (
