@@ -191,51 +191,51 @@ export default function EditorPage() {
                             </div>
 
                             <div className="overflow-x-auto max-h-[400px] overflow-y-auto custom-scrollbar">
-                                <table className="w-full text-left border-collapse">
+                                <table className="w-full text-left border-collapse min-w-[500px]">
                                     <thead className="sticky top-0 z-10">
                                         <tr className="bg-zinc-900/90 backdrop-blur-md text-zinc-400 text-xs uppercase tracking-wider shadow-md">
-                                            <th className="px-6 py-4 font-medium border-b border-zinc-800 w-20 text-center">No.</th>
-                                            <th className="px-6 py-4 font-medium border-b border-zinc-800">날짜 (YYYY-MM-DD)</th>
-                                            <th className="px-6 py-4 font-medium border-b border-zinc-800 w-40 text-center">종류</th>
-                                            <th className="px-6 py-4 font-medium border-b border-zinc-800">금액 (USD)</th>
-                                            <th className="px-6 py-4 font-medium border-b border-zinc-800 w-28 text-center">삭제</th>
+                                            <th className="px-4 py-4 font-medium border-b border-zinc-800 w-16 text-center whitespace-nowrap">No.</th>
+                                            <th className="px-4 py-4 font-medium border-b border-zinc-800 min-w-[130px] whitespace-nowrap">날짜 (YYYY-MM-DD)</th>
+                                            <th className="px-4 py-4 font-medium border-b border-zinc-800 w-32 text-center whitespace-nowrap">종류</th>
+                                            <th className="px-4 py-4 font-medium border-b border-zinc-800 min-w-[130px] whitespace-nowrap">금액 (USD)</th>
+                                            <th className="px-4 py-4 font-medium border-b border-zinc-800 w-20 text-center whitespace-nowrap">삭제</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {depositsData.map((row, idx) => (
-                                            <tr key={idx} className="border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors group">
-                                                <td className="px-6 py-3 text-center text-zinc-600 font-mono text-sm">{idx + 1}</td>
-                                                <td className="px-6 py-3">
+                                            <tr key={row._id || idx} className="border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors group">
+                                                <td className="px-4 py-3 text-center text-zinc-600 font-mono text-sm">{idx + 1}</td>
+                                                <td className="px-4 py-3">
                                                     <input
                                                         type="text"
                                                         placeholder="2024-01-01"
                                                         value={row.date}
                                                         onChange={(e) => handleDepositChange(idx, 'date', e.target.value)}
-                                                        className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                        className="w-full min-w-[110px] bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
                                                     />
                                                 </td>
-                                                <td className="px-6 py-3 text-center">
+                                                <td className="px-4 py-3 text-center">
                                                     <select
                                                         value={row.type}
                                                         onChange={(e) => handleDepositChange(idx, 'type', e.target.value)}
-                                                        className={`w-full bg-zinc-900 border ${row.type === 'deposit' ? 'border-emerald-500/50 text-emerald-400' : 'border-rose-500/50 text-rose-400'} rounded-md px-3 py-2 text-sm font-bold focus:outline-none focus:border-amber-500 cursor-pointer`}
+                                                        className={`w-full bg-zinc-900 border ${row.type === 'deposit' ? 'border-emerald-500/50 text-emerald-400' : 'border-rose-500/50 text-rose-400'} rounded-md px-2 py-2 text-sm font-bold focus:outline-none focus:border-amber-500 cursor-pointer`}
                                                     >
                                                         <option value="deposit">입금 (+)</option>
                                                         <option value="withdrawal">출금 (-)</option>
                                                     </select>
                                                 </td>
-                                                <td className="px-6 py-3">
+                                                <td className="px-4 py-3">
                                                     <div className="relative">
                                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">$</span>
                                                         <input
                                                             type="number"
                                                             value={row.amount}
                                                             onChange={(e) => handleDepositChange(idx, 'amount', e.target.value)}
-                                                            className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                            className="w-full min-w-[110px] bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
                                                         />
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-3 text-center">
+                                                <td className="px-4 py-3 text-center">
                                                     <button
                                                         onClick={() => handleRemoveDepositRow(idx)}
                                                         className="text-zinc-600 hover:text-white hover:bg-rose-500 rounded-md p-1.5 transition-colors"
@@ -274,7 +274,7 @@ export default function EditorPage() {
                         </div>
 
                         <div className="overflow-x-auto max-h-[600px] overflow-y-auto custom-scrollbar">
-                            <table className="w-full text-left border-collapse">
+                            <table className="w-full text-left border-collapse min-w-[500px]">
                                 <thead className="sticky top-0 z-10">
                                     <tr className="bg-zinc-900/90 backdrop-blur-md text-zinc-400 text-xs uppercase tracking-wider shadow-md">
                                         <th className="px-4 py-4 font-medium border-b border-zinc-800 w-16 text-center whitespace-nowrap">No.</th>
