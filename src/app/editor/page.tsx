@@ -6,11 +6,13 @@ import Link from 'next/link';
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 interface HistoryRecord {
+    _id?: string;
     date: string;
     equity: number;
 }
 
 interface DepositRecord {
+    _id?: string;
     date: string;
     type: string;
     amount: number;
@@ -33,11 +35,11 @@ export default function EditorPage() {
             setInvestedAmount(settingsData.total_invested.toString());
         }
         if (dashboardData && dashboardData.history) {
-            const sortedHistory = [...dashboardData.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            const sortedHistory = [...dashboardData.history].map((h: any) => ({ ...h, _id: crypto.randomUUID() })).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
             setHistoryData(sortedHistory);
         }
         if (depositsDataRaw) {
-            const sortedDeposits = [...depositsDataRaw].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            const sortedDeposits = [...depositsDataRaw].map((d: any) => ({ ...d, _id: crypto.randomUUID() })).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
             setDepositsData(sortedDeposits);
         }
     }, [dashboardData, settingsData, depositsDataRaw]);
@@ -64,7 +66,7 @@ export default function EditorPage() {
 
     const handleAddHistoryRow = () => {
         const today = new Date().toISOString().split('T')[0];
-        setHistoryData([{ date: today, equity: 0 }, ...historyData]);
+        setHistoryData([{ _id: crypto.randomUUID(), date: today, equity: 0 }, ...historyData]);
     };
 
     const handleRemoveHistoryRow = (index: number) => {
@@ -75,7 +77,7 @@ export default function EditorPage() {
 
     const handleAddDepositRow = () => {
         const today = new Date().toISOString().split('T')[0];
-        setDepositsData([{ date: today, type: 'deposit', amount: 0 }, ...depositsData]);
+        setDepositsData([{ _id: crypto.randomUUID(), date: today, type: 'deposit', amount: 0 }, ...depositsData]);
     };
 
     const handleRemoveDepositRow = (index: number) => {
@@ -275,37 +277,37 @@ export default function EditorPage() {
                             <table className="w-full text-left border-collapse">
                                 <thead className="sticky top-0 z-10">
                                     <tr className="bg-zinc-900/90 backdrop-blur-md text-zinc-400 text-xs uppercase tracking-wider shadow-md">
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-20 text-center">No.</th>
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800">날짜 (YYYY-MM-DD 기입)</th>
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800">자산 총액 (Equity)</th>
-                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-28 text-center">삭제</th>
+                                        <th className="px-4 py-4 font-medium border-b border-zinc-800 w-16 text-center whitespace-nowrap">No.</th>
+                                        <th className="px-4 py-4 font-medium border-b border-zinc-800 min-w-[140px] whitespace-nowrap">날짜 (YYYY-MM-DD 기입)</th>
+                                        <th className="px-4 py-4 font-medium border-b border-zinc-800 min-w-[140px] whitespace-nowrap">자산 총액 (Equity)</th>
+                                        <th className="px-4 py-4 font-medium border-b border-zinc-800 w-20 text-center whitespace-nowrap">삭제</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {historyData.map((row, idx) => (
-                                        <tr key={idx} className="border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors group">
-                                            <td className="px-6 py-3 text-center text-zinc-600 font-mono text-sm">{idx + 1}</td>
-                                            <td className="px-6 py-3">
+                                        <tr key={row._id || idx} className="border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors group">
+                                            <td className="px-4 py-3 text-center text-zinc-600 font-mono text-sm">{idx + 1}</td>
+                                            <td className="px-4 py-3">
                                                 <input
                                                     type="text"
                                                     placeholder="2024-01-01"
                                                     value={row.date}
                                                     onChange={(e) => handleHistoryChange(idx, 'date', e.target.value)}
-                                                    className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-indigo-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                    className="w-full min-w-[110px] bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-indigo-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
                                                 />
                                             </td>
-                                            <td className="px-6 py-3">
+                                            <td className="px-4 py-3">
                                                 <div className="relative">
                                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">$</span>
                                                     <input
                                                         type="number"
                                                         value={row.equity}
                                                         onChange={(e) => handleHistoryChange(idx, 'equity', e.target.value)}
-                                                        className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-indigo-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                        className="w-full min-w-[110px] bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-indigo-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
                                                     />
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-3 text-center">
+                                            <td className="px-4 py-3 text-center">
                                                 <button
                                                     onClick={() => handleRemoveHistoryRow(idx)}
                                                     className="text-zinc-600 hover:text-white hover:bg-rose-500 rounded-md p-1.5 transition-colors"
