@@ -10,14 +10,22 @@ interface HistoryRecord {
     equity: number;
 }
 
+interface DepositRecord {
+    date: string;
+    type: string;
+    amount: number;
+}
+
 export default function EditorPage() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
     const { data: dashboardData, isLoading: dashLoading } = useSWR(`${apiUrl}/api/dashboard`, fetcher);
     const { data: settingsData, isLoading: setLoading } = useSWR(`${apiUrl}/api/settings`, fetcher);
+    const { data: depositsDataRaw, isLoading: depLoading } = useSWR(`${apiUrl}/api/deposits`, fetcher);
 
     const [investedAmount, setInvestedAmount] = useState<string>('0');
     const [historyData, setHistoryData] = useState<HistoryRecord[]>([]);
+    const [depositsData, setDepositsData] = useState<DepositRecord[]>([]);
     const [loading, setLoadingState] = useState(false);
 
     useEffect(() => {
@@ -27,9 +35,14 @@ export default function EditorPage() {
         if (dashboardData && dashboardData.history) {
             setHistoryData([...dashboardData.history]);
         }
-    }, [dashboardData, settingsData]);
+        if (depositsDataRaw) {
+            // Ensure deposits are sorted by date
+            const sorted = [...depositsDataRaw].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+            setDepositsData(sorted);
+        }
+    }, [dashboardData, settingsData, depositsDataRaw]);
 
-    const handleCellChange = (index: number, field: keyof HistoryRecord, value: string) => {
+    const handleHistoryChange = (index: number, field: keyof HistoryRecord, value: string) => {
         const newData = [...historyData];
         if (field === 'date') {
             newData[index].date = value;
@@ -39,15 +52,36 @@ export default function EditorPage() {
         setHistoryData(newData);
     };
 
-    const handleAddRow = () => {
+    const handleDepositChange = (index: number, field: keyof DepositRecord, value: string) => {
+        const newData = [...depositsData];
+        if (field === 'date' || field === 'type') {
+            newData[index][field] = value as any;
+        } else {
+            newData[index].amount = Number(value);
+        }
+        setDepositsData(newData);
+    };
+
+    const handleAddHistoryRow = () => {
         const today = new Date().toISOString().split('T')[0];
         setHistoryData([...historyData, { date: today, equity: 0 }]);
     };
 
-    const handleRemoveRow = (index: number) => {
+    const handleRemoveHistoryRow = (index: number) => {
         const newData = [...historyData];
         newData.splice(index, 1);
         setHistoryData(newData);
+    };
+
+    const handleAddDepositRow = () => {
+        const today = new Date().toISOString().split('T')[0];
+        setDepositsData([...depositsData, { date: today, type: 'deposit', amount: 0 }]);
+    };
+
+    const handleRemoveDepositRow = (index: number) => {
+        const newData = [...depositsData];
+        newData.splice(index, 1);
+        setDepositsData(newData);
     };
 
     const handleSaveAll = async () => {
@@ -60,13 +94,20 @@ export default function EditorPage() {
             });
 
             const validHistory = historyData.filter(h => h.date.trim() !== '');
-            const res = await fetch(`${apiUrl}/api/history/bulk`, {
+            const resHistory = await fetch(`${apiUrl}/api/history/bulk`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(validHistory)
             });
 
-            if (res.ok) {
+            const validDeposits = depositsData.filter(d => d.date.trim() !== '' && d.amount > 0);
+            const resDeposits = await fetch(`${apiUrl}/api/deposits`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(validDeposits)
+            });
+
+            if (resHistory.ok && resDeposits.ok) {
                 alert("성공적으로 저장되었습니다.");
                 // Redirect user back to dashboard or let them stay
                 window.location.href = '/';
@@ -81,7 +122,7 @@ export default function EditorPage() {
         }
     };
 
-    if (dashLoading || setLoading) {
+    if (dashLoading || setLoading || depLoading) {
         return (
             <div className="flex h-screen items-center justify-center bg-black text-white">
                 <div className="flex flex-col items-center">
@@ -130,6 +171,88 @@ export default function EditorPage() {
                         </div>
                     </div>
 
+                    {/* Deposits Grid Section */}
+                    <div className="bg-zinc-800/30 border border-white/5 rounded-xl flex flex-col overflow-hidden">
+                        <div className="p-5 border-b border-white/5 bg-zinc-900/50 flex justify-between items-center">
+                            <label className="text-sm font-medium text-amber-400 uppercase tracking-wide drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">
+                                입출금 내역 (Deposits & Withdrawals)
+                            </label>
+                            <button
+                                onClick={handleAddDepositRow}
+                                className="text-sm bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-1 border border-amber-500/20 hover:border-amber-500 hover:shadow-[0_0_15px_rgba(251,191,36,0.5)]"
+                            >
+                                <span>+</span> 새로운 내역 추가
+                            </button>
+                        </div>
+
+                        <div className="overflow-x-auto max-h-[400px] overflow-y-auto custom-scrollbar">
+                            <table className="w-full text-left border-collapse">
+                                <thead className="sticky top-0 z-10">
+                                    <tr className="bg-zinc-900/90 backdrop-blur-md text-zinc-400 text-xs uppercase tracking-wider shadow-md">
+                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-20 text-center">No.</th>
+                                        <th className="px-6 py-4 font-medium border-b border-zinc-800">날짜 (YYYY-MM-DD)</th>
+                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-40 text-center">종류</th>
+                                        <th className="px-6 py-4 font-medium border-b border-zinc-800">금액 (USD)</th>
+                                        <th className="px-6 py-4 font-medium border-b border-zinc-800 w-28 text-center">삭제</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {depositsData.map((row, idx) => (
+                                        <tr key={idx} className="border-b border-zinc-800/30 hover:bg-zinc-800/50 transition-colors group">
+                                            <td className="px-6 py-3 text-center text-zinc-600 font-mono text-sm">{idx + 1}</td>
+                                            <td className="px-6 py-3">
+                                                <input
+                                                    type="text"
+                                                    placeholder="2024-01-01"
+                                                    value={row.date}
+                                                    onChange={(e) => handleDepositChange(idx, 'date', e.target.value)}
+                                                    className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-3 text-center">
+                                                <select
+                                                    value={row.type}
+                                                    onChange={(e) => handleDepositChange(idx, 'type', e.target.value)}
+                                                    className={`w-full bg-zinc-900 border ${row.type === 'deposit' ? 'border-emerald-500/50 text-emerald-400' : 'border-rose-500/50 text-rose-400'} rounded-md px-3 py-2 text-sm font-bold focus:outline-none focus:border-amber-500 cursor-pointer`}
+                                                >
+                                                    <option value="deposit">입금 (+)</option>
+                                                    <option value="withdrawal">출금 (-)</option>
+                                                </select>
+                                            </td>
+                                            <td className="px-6 py-3">
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">$</span>
+                                                    <input
+                                                        type="number"
+                                                        value={row.amount}
+                                                        onChange={(e) => handleDepositChange(idx, 'amount', e.target.value)}
+                                                        className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-amber-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-3 text-center">
+                                                <button
+                                                    onClick={() => handleRemoveDepositRow(idx)}
+                                                    className="text-zinc-600 hover:text-white hover:bg-rose-500 rounded-md p-1.5 transition-colors"
+                                                    title="행 삭제"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {depositsData.length === 0 && (
+                                        <tr>
+                                            <td colSpan={5} className="px-6 py-12 text-center text-zinc-500 font-medium">
+                                                입출금 내역이 없습니다.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     {/* History Grid Section */}
                     <div className="bg-zinc-800/30 border border-white/5 rounded-xl flex flex-col overflow-hidden">
                         <div className="p-5 border-b border-white/5 bg-zinc-900/50 flex justify-between items-center">
@@ -137,7 +260,7 @@ export default function EditorPage() {
                                 일자별 자산 기록 (History)
                             </label>
                             <button
-                                onClick={handleAddRow}
+                                onClick={handleAddHistoryRow}
                                 className="text-sm bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-1 border border-indigo-500/20 hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                             >
                                 <span>+</span> 새로운 행 추가
@@ -163,7 +286,7 @@ export default function EditorPage() {
                                                     type="text"
                                                     placeholder="2024-01-01"
                                                     value={row.date}
-                                                    onChange={(e) => handleCellChange(idx, 'date', e.target.value)}
+                                                    onChange={(e) => handleHistoryChange(idx, 'date', e.target.value)}
                                                     className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-indigo-500 focus:bg-zinc-950/80 rounded-md px-3 py-2 text-zinc-200 font-mono focus:outline-none transition-colors"
                                                 />
                                             </td>
@@ -173,14 +296,14 @@ export default function EditorPage() {
                                                     <input
                                                         type="number"
                                                         value={row.equity}
-                                                        onChange={(e) => handleCellChange(idx, 'equity', e.target.value)}
+                                                        onChange={(e) => handleHistoryChange(idx, 'equity', e.target.value)}
                                                         className="w-full bg-transparent border border-transparent group-hover:border-zinc-700/50 focus:border-indigo-500 focus:bg-zinc-950/80 rounded-md py-2 pl-7 pr-3 text-zinc-200 font-mono focus:outline-none transition-colors"
                                                     />
                                                 </div>
                                             </td>
                                             <td className="px-6 py-3 text-center">
                                                 <button
-                                                    onClick={() => handleRemoveRow(idx)}
+                                                    onClick={() => handleRemoveHistoryRow(idx)}
                                                     className="text-zinc-600 hover:text-white hover:bg-rose-500 rounded-md p-1.5 transition-colors"
                                                     title="행 삭제"
                                                 >

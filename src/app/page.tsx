@@ -3,6 +3,7 @@
 import React from 'react';
 import useSWR from 'swr';
 import { motion, Variants } from 'framer-motion';
+import Link from 'next/link';
 import TopBar from '@/components/TopBar';
 import LeftSummary from '@/components/LeftSummary';
 import PositionsTable from '@/components/PositionsTable';
@@ -107,6 +108,12 @@ export default function Dashboard() {
             </h1>
           </div>
           <div className="flex items-center space-x-2 text-sm text-zinc-500">
+            <Link
+              href="/editor"
+              className="mr-6 px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 hover:text-indigo-300 border border-indigo-500/30 rounded-lg flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(99,102,241,0.15)] hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] font-bold tracking-wide"
+            >
+              <span>⚙️</span> 데이터 에디터
+            </Link>
             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse"></div>
             <span>실시간 동기화 중</span>
           </div>
