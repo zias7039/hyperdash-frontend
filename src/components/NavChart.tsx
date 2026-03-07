@@ -132,8 +132,8 @@ export default function NavChart({ history }: NavChartProps) {
                                         return [formatted, name || ''];
                                     }}
                                 />
-                                <Area type="monotone" dataKey="btcReturn" stroke="#6366f1" strokeWidth={2} strokeDasharray="5 5" fillOpacity={1} fill="url(#colorBtcReturn)" animationDuration={1000} connectNulls={true} />
                                 <Area type="monotone" dataKey="myReturn" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorMyReturn)" animationDuration={1000} connectNulls={true} />
+                                <Area type="monotone" dataKey="btcReturn" stroke="#6366f1" strokeWidth={3} strokeDasharray="5 5" fillOpacity={1} fill="url(#colorBtcReturn)" animationDuration={1000} connectNulls={true} />
                             </AreaChart>
                         )}
                     </ResponsiveContainer>
