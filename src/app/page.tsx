@@ -149,7 +149,7 @@ export default function Dashboard() {
               <MarginPieChart data={margin_distribution} />
             </motion.div>
             <motion.div variants={itemVariants} className="lg:col-span-2 h-full">
-              <Heatmap history={history} />
+              <Heatmap history={history} usdt_rate={metrics.usdt_rate} />
             </motion.div>
             <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
               <MonthlyReturn history={history} />
@@ -159,7 +159,7 @@ export default function Dashboard() {
 
         {/* Bottom Section - Positions */}
         <motion.div variants={itemVariants}>
-          <PositionsTable positions={positions} btc_benchmark={btc_benchmark} />
+          <PositionsTable positions={positions} btc_benchmark={btc_benchmark} usdt_rate={metrics.usdt_rate} />
         </motion.div>
 
       </motion.div>

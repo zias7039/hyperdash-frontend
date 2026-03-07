@@ -42,8 +42,11 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
                     <span className="text-zinc-400 text-xs font-medium uppercase flex items-center mb-1">
                         <TrendingUp className="w-3 h-3 mr-1 text-indigo-400" /> UPL (PNL)
                     </span>
-                    <span className={`text-xl font-black drop-shadow-md ${upl_pnl >= 0 ? 'text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.4)]' : 'text-rose-400 drop-shadow-[0_0_12px_rgba(251,113,133,0.4)]'}`}>
-                        {formatCurrency(upl_pnl)}
+                    <span className={`text-xl font-black drop-shadow-md flex items-end justify-between ${upl_pnl >= 0 ? 'text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.4)]' : 'text-rose-400 drop-shadow-[0_0_12px_rgba(251,113,133,0.4)]'}`}>
+                        <span>{formatCurrency(upl_pnl)}</span>
+                        <span className="text-[11px] text-zinc-500 font-medium ml-2 pb-1 bg-transparent">
+                            ({new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW', maximumFractionDigits: 0 }).format(upl_pnl * usdt_rate)})
+                        </span>
                     </span>
                 </div>
 

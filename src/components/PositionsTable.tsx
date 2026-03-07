@@ -20,11 +20,16 @@ interface PositionsTableProps {
         price: number;
         change24h: number;
     };
+    usdt_rate?: number;
 }
 
-export default function PositionsTable({ positions, btc_benchmark }: PositionsTableProps) {
+export default function PositionsTable({ positions, btc_benchmark, usdt_rate }: PositionsTableProps) {
     const formatNum = (val: string | number) => Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
     const formatCurrency = (val: string | number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val));
+    const formatKRW = (val: string | number) => {
+        if (!usdt_rate) return '';
+        return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW', maximumFractionDigits: 0 }).format(Number(val) * usdt_rate);
+    };
 
     const calculateRiskPct = (open: string, mark: string, liq: string, isLong: boolean) => {
         const o = Number(open);
@@ -89,11 +94,15 @@ export default function PositionsTable({ positions, btc_benchmark }: PositionsTa
                                             </span>
                                             <span className="text-zinc-400">{pos.leverage}x</span>
                                         </td>
-                                        <td className="px-4 py-3 text-right font-medium">{formatCurrency(pos.marginSize)}</td>
+                                        <td className="px-4 py-3 text-right font-medium">
+                                            {formatCurrency(pos.marginSize)}
+                                            {usdt_rate && <div className="text-[10px] text-zinc-500 font-normal mt-0.5">{formatKRW(pos.marginSize)}</div>}
+                                        </td>
                                         <td className="px-4 py-3 text-right">{formatNum(pos.openPriceAvg)}</td>
                                         <td className="px-4 py-3 text-right">{formatNum(pos.markPrice)}</td>
                                         <td className={`px-4 py-3 text-right font-bold ${pnlClass}`}>
-                                            {pnl > 0 ? '+' : ''}{formatCurrency(pnl)}
+                                            <div>{pnl > 0 ? '+' : ''}{formatCurrency(pnl)}</div>
+                                            {usdt_rate && <div className="text-[10px] text-zinc-500 font-normal mt-0.5">{pnl > 0 ? '+' : ''}{formatKRW(pnl)}</div>}
                                         </td>
                                         <td className="px-4 py-3 text-right">
                                             <div className="text-orange-400 mb-1 leading-tight">{formatNum(pos.liquidationPrice)}</div>

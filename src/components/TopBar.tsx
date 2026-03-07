@@ -43,12 +43,14 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
                 <span className={`text-xl font-black drop-shadow-md ${roi >= 0 ? 'text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.4)]' : 'text-rose-400 drop-shadow-[0_0_12px_rgba(251,113,133,0.4)]'}`}>
                     {roi > 0 ? '+' : ''}{roi.toFixed(2)}%
                 </span>
-                <span className="text-[10px] text-zinc-500 font-medium">원금: {formatCurrency(total_invested)}</span>
+                <span className="text-[10px] text-zinc-500 font-medium">원금: {formatCurrency(total_invested)} <span className="text-zinc-600">({formatKRW(total_invested)})</span></span>
             </div>
 
             <div className="flex flex-col items-end">
                 <span className="text-zinc-400 text-xs font-medium uppercase tracking-wider mb-1">사용 가능 증거금</span>
-                <span className="text-xl font-bold text-white tracking-tight">{formatCurrency(available)}</span>
+                <span className="text-xl font-bold text-white tracking-tight">
+                    {formatCurrency(available)} <span className="text-xs text-zinc-500 font-normal">({formatKRW(available)})</span>
+                </span>
             </div>
 
             <div className="flex flex-col items-end pr-4 text-right">
