@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
@@ -11,6 +11,8 @@ import NavChart from '@/components/NavChart';
 import MarginPieChart from '@/components/MarginPieChart';
 import Heatmap from '@/components/Heatmap';
 import MonthlyReturn from '@/components/MonthlyReturn';
+import { ErrorBoundary } from 'react-error-boundary';
+import { TopBarSkeleton, LeftSummarySkeleton, NavChartSkeleton, PositionsTableSkeleton } from '@/components/Skeletons';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -23,6 +25,37 @@ export default function Dashboard() {
   });
 
   const { data: settings, mutate: mutateSettings } = useSWR(`${apiUrl}/api/settings`, fetcher);
+
+  // --- Live WebSocket Data ---
+  const [liveData, setLiveData] = useState<{ equity?: number, available?: number, upl_pnl?: number } | null>(null);
+
+  useEffect(() => {
+    let ws: WebSocket;
+    let reconnectTimer: NodeJS.Timeout;
+    const wsUrl = apiUrl.replace("http://", "ws://").replace("https://", "wss://");
+
+    const connect = () => {
+      ws = new WebSocket(`${wsUrl}/ws/live`);
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.equity !== undefined) {
+            setLiveData(msg);
+          }
+        } catch (e) { }
+      };
+      ws.onclose = () => {
+        reconnectTimer = setTimeout(connect, 3000);
+      };
+    };
+
+    connect();
+
+    return () => {
+      clearTimeout(reconnectTimer);
+      if (ws) ws.close();
+    };
+  }, [apiUrl]);
 
   const handleDataUpdated = () => {
     mutateSettings();
@@ -43,10 +76,30 @@ export default function Dashboard() {
 
   if (isLoading || !data) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black text-white">
-        <div className="flex flex-col items-center">
-          <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-zinc-400 font-medium tracking-wider animate-pulse">대시보드 로딩 중...</p>
+      <div className="min-h-screen bg-black text-white p-6 font-sans">
+        <div className="max-w-[1600px] mx-auto space-y-6">
+          <header className="flex items-center justify-between mb-8 opacity-50">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-zinc-800 rounded-lg animate-pulse" />
+              <div className="h-8 w-40 bg-zinc-800 rounded-lg animate-pulse" />
+            </div>
+            <div className="h-4 w-32 bg-zinc-800 rounded-lg animate-pulse" />
+          </header>
+
+          <TopBarSkeleton />
+
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[400px]">
+              <div className="lg:col-span-1 h-full"><LeftSummarySkeleton /></div>
+              <div className="lg:col-span-3 h-full"><NavChartSkeleton /></div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[400px]">
+              <div className="lg:col-span-1 h-full"><div className="glass-panel p-4 h-full animate-pulse bg-zinc-900/40"></div></div>
+              <div className="lg:col-span-2 h-full"><PositionsTableSkeleton /></div>
+              <div className="lg:col-span-1 h-full"><div className="glass-panel p-4 h-full animate-pulse bg-zinc-900/40"></div></div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -67,6 +120,11 @@ export default function Dashboard() {
   }
 
   const { metrics, positions, history, btc_benchmark, margin_distribution } = data;
+
+  // Use live metrics if available, otherwise fallback to SWR data
+  const currentEquity = liveData?.equity ?? metrics.equity;
+  const currentAvailable = liveData?.available ?? metrics.available;
+  const currentUplPnl = liveData?.upl_pnl ?? metrics.upl_pnl;
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -119,57 +177,66 @@ export default function Dashboard() {
           </div>
         </motion.header>
 
-        {/* Top Metrics Row */}
-        <motion.div variants={itemVariants}>
-          <TopBar
-            equity={metrics.equity}
-            available={metrics.available}
-            leverage={metrics.leverage}
-            usdt_rate={metrics.usdt_rate}
-            total_invested={settings?.total_invested || 0}
-            btc_return={history && history.length > 0 ? history[history.length - 1].btc_return_pct : null}
-          />
-        </motion.div>
+        <ErrorBoundary fallback={
+          <div className="p-8 text-center glass-panel border border-rose-500/30 bg-rose-500/5">
+            <h2 className="text-xl font-bold text-rose-500 mb-2">무언가 잘못되었습니다</h2>
+            <p className="text-zinc-400 text-sm">페이지를 새로고침 하거나 데이터를 다시 확인해주세요.</p>
+            <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-rose-500/20 text-rose-400 rounded-lg text-sm font-bold shadow-md hover:bg-rose-500/30 transition-colors">새로고침</button>
+          </div>
+        }>
 
-        {/* Main Content Grid - V6 Perfectly Aligned Layout */}
-        <div className="flex flex-col gap-4">
+          {/* Top Metrics Row */}
+          <motion.div variants={itemVariants}>
+            <TopBar
+              equity={metrics.equity}
+              available={metrics.available}
+              leverage={metrics.leverage}
+              usdt_rate={metrics.usdt_rate}
+              total_invested={settings?.total_invested || 0}
+              btc_return={history && history.length > 0 ? history[history.length - 1].btc_return_pct : null}
+            />
+          </motion.div>
 
-          {/* Row 1: LeftSummary (25%) + NavChart (75%) */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[400px]">
-            <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
-              <LeftSummary
-                equity={metrics.equity}
-                usage_pct={metrics.usage_pct}
-                upl_pnl={metrics.upl_pnl}
-                roe={metrics.roe}
-                pos_data={positions}
-                usdt_rate={metrics.usdt_rate}
-              />
-            </motion.div>
-            <motion.div variants={itemVariants} className="lg:col-span-3 h-full">
-              <NavChart history={history} />
-            </motion.div>
+          {/* Main Content Grid - V6 Perfectly Aligned Layout */}
+          <div className="flex flex-col gap-4">
+
+            {/* Row 1: LeftSummary (25%) + NavChart (75%) */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[400px]">
+              <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
+                <LeftSummary
+                  equity={metrics.equity}
+                  usage_pct={metrics.usage_pct}
+                  upl_pnl={metrics.upl_pnl}
+                  roe={metrics.roe}
+                  pos_data={positions}
+                  usdt_rate={metrics.usdt_rate}
+                />
+              </motion.div>
+              <motion.div variants={itemVariants} className="lg:col-span-3 h-full">
+                <NavChart history={history} />
+              </motion.div>
+            </div>
+
+            {/* Row 2: MarginPieChart (25%) + Heatmap (50%) + MonthlyReturn (25%) */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[260px]">
+              <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
+                <MarginPieChart data={margin_distribution} />
+              </motion.div>
+              <motion.div variants={itemVariants} className="lg:col-span-2 h-full">
+                <Heatmap history={history} usdt_rate={metrics.usdt_rate} />
+              </motion.div>
+              <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
+                <MonthlyReturn history={history} />
+              </motion.div>
+            </div>
           </div>
 
-          {/* Row 2: MarginPieChart (25%) + Heatmap (50%) + MonthlyReturn (25%) */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch lg:min-h-[260px]">
-            <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
-              <MarginPieChart data={margin_distribution} />
-            </motion.div>
-            <motion.div variants={itemVariants} className="lg:col-span-2 h-full">
-              <Heatmap history={history} usdt_rate={metrics.usdt_rate} />
-            </motion.div>
-            <motion.div variants={itemVariants} className="lg:col-span-1 h-full">
-              <MonthlyReturn history={history} />
-            </motion.div>
-          </div>
-        </div>
+          {/* Bottom Section - Positions */}
+          <motion.div variants={itemVariants}>
+            <PositionsTable positions={positions} btc_benchmark={btc_benchmark} usdt_rate={metrics.usdt_rate} />
+          </motion.div>
 
-        {/* Bottom Section - Positions */}
-        <motion.div variants={itemVariants}>
-          <PositionsTable positions={positions} btc_benchmark={btc_benchmark} usdt_rate={metrics.usdt_rate} />
-        </motion.div>
-
+        </ErrorBoundary>
       </motion.div>
     </div>
   );

@@ -11,6 +11,7 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Hyperdash",
   description: "Cryptocurrency Trading Dashboard",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
