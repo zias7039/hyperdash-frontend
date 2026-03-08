@@ -44,7 +44,7 @@ export default function PositionsTable({ positions, btc_benchmark, usdt_rate }: 
     };
 
     return (
-        <div className="glass-panel mt-4 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-300">
+        <div className="glass-panel mt-4 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-white/20 transition-all duration-300 bg-zinc-900/40 backdrop-blur-xl">
             <div className="p-4 border-b border-white/10 bg-zinc-900/40 flex items-center justify-between flex-wrap gap-3">
                 <h3 className="text-lg font-bold text-white tracking-wide">현재 포지션</h3>
                 {btc_benchmark && (
@@ -61,7 +61,7 @@ export default function PositionsTable({ positions, btc_benchmark, usdt_rate }: 
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-zinc-300">
-                    <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/60 backdrop-blur border-b border-white/5">
+                    <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/80 backdrop-blur border-b border-white/10">
                         <tr>
                             <th className="px-4 py-3">심볼</th>
                             <th className="px-4 py-3">포지션/레버리지</th>
@@ -86,13 +86,13 @@ export default function PositionsTable({ positions, btc_benchmark, usdt_rate }: 
                                 const pnlClass = pnl >= 0 ? 'text-emerald-400' : 'text-rose-400';
 
                                 return (
-                                    <tr key={idx} className="border-b border-zinc-800 hover:bg-zinc-800/30 transition-colors">
-                                        <td className="px-4 py-3 font-bold text-white">{pos.symbol}</td>
+                                    <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                                        <td className="px-4 py-3 font-bold text-white group-hover:text-indigo-300 transition-colors">{pos.symbol}</td>
                                         <td className="px-4 py-3">
-                                            <span className={`px-2 py-1 rounded text-xs font-bold mr-2 ${isLong ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                                            <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold tracking-wider mr-2 ${isLong ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 drop-shadow-[0_0_8px_rgba(52,211,153,0.3)]' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30 drop-shadow-[0_0_8px_rgba(251,113,133,0.3)]'}`}>
                                                 {pos.holdSide.toUpperCase()}
                                             </span>
-                                            <span className="text-zinc-400">{pos.leverage}x</span>
+                                            <span className="text-zinc-400 font-medium">{pos.leverage}x</span>
                                         </td>
                                         <td className="px-4 py-3 text-right font-medium">
                                             {formatCurrency(pos.marginSize)}
@@ -101,7 +101,7 @@ export default function PositionsTable({ positions, btc_benchmark, usdt_rate }: 
                                         <td className="px-4 py-3 text-right">{formatNum(pos.openPriceAvg)}</td>
                                         <td className="px-4 py-3 text-right">{formatNum(pos.markPrice)}</td>
                                         <td className={`px-4 py-3 text-right font-bold ${pnlClass}`}>
-                                            <div>{pnl > 0 ? '+' : ''}{formatCurrency(pnl)}</div>
+                                            <div className="group-hover:drop-shadow-md transition-all">{pnl > 0 ? '+' : ''}{formatCurrency(pnl)}</div>
                                             {usdt_rate && <div className="text-[10px] text-zinc-500 font-normal mt-0.5">{pnl > 0 ? '+' : ''}{formatKRW(pnl)}</div>}
                                         </td>
                                         <td className="px-4 py-3 text-right">

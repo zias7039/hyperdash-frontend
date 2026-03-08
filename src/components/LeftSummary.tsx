@@ -1,6 +1,6 @@
 // src/components/LeftSummary.tsx
 import React from 'react';
-import { TrendingUp, Percent, DollarSign, Activity } from 'lucide-react';
+import { TrendingUp, Percent, DollarSign, Activity, PieChart, Layers } from 'lucide-react';
 
 interface Position {
     symbol: string;
@@ -22,14 +22,14 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
     const formatCurrency = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
-        <div className="glass-panel p-4 h-full hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-4 h-full hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-white/20 bg-zinc-900/60 backdrop-blur-xl">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center">
                 <Activity className="w-4 h-4 mr-2 text-indigo-400" />
                 요약
             </h3>
 
             <div className="space-y-3">
-                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl">
+                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl hover:bg-zinc-800/50 hover:border-white/10 transition-colors">
                     <span className="text-zinc-400 text-xs font-medium uppercase flex items-center mb-1">
                         <Percent className="w-3 h-3 mr-1 text-indigo-400" /> ROE
                     </span>
@@ -38,7 +38,7 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
                     </span>
                 </div>
 
-                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl">
+                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl hover:bg-zinc-800/50 hover:border-white/10 transition-colors">
                     <span className="text-zinc-400 text-xs font-medium uppercase flex items-center mb-1">
                         <TrendingUp className="w-3 h-3 mr-1 text-indigo-400" /> UPL (PNL)
                     </span>
@@ -50,9 +50,11 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
                     </span>
                 </div>
 
-                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl flex justify-between items-center">
+                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl flex justify-between items-center hover:bg-zinc-800/50 hover:border-white/10 transition-colors">
                     <div>
-                        <span className="text-zinc-400 text-xs font-medium uppercase mb-1 block">증거금 사용률</span>
+                        <span className="text-zinc-400 text-xs font-medium uppercase mb-1 flex items-center">
+                            <PieChart className="w-3 h-3 mr-1 text-indigo-400" /> 증거금 사용률
+                        </span>
                         <span className="text-lg font-bold text-white drop-shadow-sm">{usage_pct.toFixed(2)}%</span>
                     </div>
                     <div className="w-20 bg-zinc-950/50 rounded-full h-2 overflow-hidden border border-white/5">
@@ -63,8 +65,10 @@ export default function LeftSummary({ equity, usage_pct, upl_pnl, roe, pos_data,
                     </div>
                 </div>
 
-                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl flex justify-between items-center">
-                    <span className="text-zinc-400 text-xs font-medium uppercase">보유 포지션</span>
+                <div className="bg-zinc-800/30 border border-white/5 p-3 rounded-xl flex justify-between items-center hover:bg-zinc-800/50 hover:border-white/10 transition-colors">
+                    <span className="text-zinc-400 text-xs font-medium uppercase flex items-center">
+                        <Layers className="w-3 h-3 mr-1 text-indigo-400" /> 보유 포지션
+                    </span>
                     <span className="text-lg font-bold text-white drop-shadow-sm">{pos_data.length}</span>
                 </div>
             </div>

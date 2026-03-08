@@ -1,6 +1,7 @@
 // src/components/TopBar.tsx
 import React from 'react';
 import Link from 'next/link';
+import CountUp from 'react-countup';
 
 interface TopBarProps {
     equity: number;
@@ -34,8 +35,12 @@ export default function TopBar({ equity, available, leverage, usdt_rate, total_i
             <div className="flex flex-col">
                 <span className="text-zinc-400 text-xs font-medium uppercase tracking-wider mb-1">총 자산</span>
                 <div className="flex items-baseline space-x-2">
-                    <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] tracking-tight">{formatCurrency(equity)}</span>
-                    <span className="text-xs font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">/{formatKRW(equity)}</span>
+                    <span className="text-3xl font-extrabold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] tracking-tight">
+                        <CountUp end={equity} prefix="$" decimals={2} separator="," duration={1.5} preserveValue={true} />
+                    </span>
+                    <span className="text-xs font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]">
+                        /<CountUp end={equity * usdt_rate} prefix="₩" separator="," duration={1.5} preserveValue={true} />
+                    </span>
                 </div>
             </div>
 

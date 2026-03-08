@@ -43,7 +43,7 @@ export default function NavChart({ history }: NavChartProps) {
     const latestReturn = returnData.length > 0 ? returnData[returnData.length - 1] : null;
 
     return (
-        <div className="glass-panel p-4 h-full min-h-[300px] flex flex-col hover:-translate-y-1 transition-transform duration-300">
+        <div className="glass-panel p-4 h-full min-h-[300px] flex flex-col hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-white/20 bg-zinc-900/60 backdrop-blur-xl">
             {/* Header with Tabs */}
             <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
                 <div className="flex items-center gap-1">
@@ -87,9 +87,10 @@ export default function NavChart({ history }: NavChartProps) {
                                 <XAxis dataKey="date" stroke="#a1a1aa" tick={{ fill: '#a1a1aa', fontSize: 11 }} tickLine={false} axisLine={false}
                                     tickFormatter={(val) => { try { const d = new Date(val); return `${d.getMonth() + 1}/${d.getDate()}`; } catch { return val; } }}
                                 />
-                                <YAxis stroke="#a1a1aa" tick={{ fill: '#a1a1aa', fontSize: 11 }} tickLine={false} axisLine={false} domain={['auto', 'auto']} tickFormatter={(val) => `$${val}`} />
+                                <YAxis stroke="#a1a1aa" tick={{ fill: '#a1a1aa', fontSize: 11 }} tickLine={false} axisLine={false} domain={['auto', 'auto']} tickFormatter={(val) => `$${Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(val)}`} />
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: 'rgba(20,20,22,0.8)', borderColor: 'rgba(255,255,255,0.1)', color: '#f4f4f5', borderRadius: '12px', backdropFilter: 'blur(10px)' }}
+                                    contentStyle={{ backgroundColor: 'rgba(24,24,27,0.7)', borderColor: 'rgba(255,255,255,0.15)', color: '#f4f4f5', borderRadius: '16px', backdropFilter: 'blur(16px)', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
+                                    cursor={{ stroke: '#ffffff', strokeWidth: 1, strokeDasharray: '3 3', strokeOpacity: 0.15 }}
                                     itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
                                     formatter={(value: any, name: string | undefined) => {
                                         if (name === 'equity') return [formatCurrency(Number(value) || 0), '내 자산'];
@@ -117,7 +118,8 @@ export default function NavChart({ history }: NavChartProps) {
                                 <YAxis stroke="#a1a1aa" tick={{ fill: '#a1a1aa', fontSize: 11 }} tickLine={false} axisLine={false} domain={['auto', 'auto']} tickFormatter={(val) => `${val}%`} />
                                 <ReferenceLine y={0} stroke="rgba(255,255,255,0.15)" strokeDasharray="3 3" />
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: 'rgba(20,20,22,0.9)', borderColor: 'rgba(255,255,255,0.1)', color: '#f4f4f5', borderRadius: '12px', backdropFilter: 'blur(10px)' }}
+                                    contentStyle={{ backgroundColor: 'rgba(24,24,27,0.7)', borderColor: 'rgba(255,255,255,0.15)', color: '#f4f4f5', borderRadius: '16px', backdropFilter: 'blur(16px)', boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
+                                    cursor={{ stroke: '#ffffff', strokeWidth: 1, strokeDasharray: '3 3', strokeOpacity: 0.15 }}
                                     formatter={(value: any, name: string | undefined) => {
                                         const v = Number(value);
                                         const formatted = `${v > 0 ? '+' : ''}${v.toFixed(2)}%`;
